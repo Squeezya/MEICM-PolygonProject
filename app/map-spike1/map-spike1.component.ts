@@ -16,6 +16,7 @@ export class MapSpike1Component implements OnInit {
     path: Coordinate[];
     pathColor: string;
     polygonPath: Array<LatLngLiteral>;
+    polygonPath2: Array<LatLngLiteral>;
     pathAux: Coordinate[];
     markers: Coordinate[];
     pathAuxColor: string;
@@ -34,9 +35,11 @@ export class MapSpike1Component implements OnInit {
     polygonConfig: {
         strokeColor: string;
         fillColor: string;
+        strokeWeight: number;
     } = {
         strokeColor: "#8ab5e3",
-        fillColor: "#8ab5e3"
+        fillColor: "#8ab5e3",
+        strokeWeight: 0
     };
 
     constructor(private coordinateService: CoordinateService) {
@@ -46,9 +49,10 @@ export class MapSpike1Component implements OnInit {
         this.pathAux = [];
         this.markers = [];
         this.polygonPath = [];
+        this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getPath(2);
+        this.getPath(3);
     }
 
     getPath(index: number): void {
@@ -58,20 +62,14 @@ export class MapSpike1Component implements OnInit {
             this.mapConfig.lat = this.path[0].latitude;
             this.mapConfig.lng = this.path[0].longitude;
             this.polygonPath = [];
+            this.polygonPath2 = [];
             var auxPath = this.getRawPolygonPath(this.path, 0.008);
-            let size = auxPath.length;
-            let aaa = auxPath.slice(0);
-            // for (var i = 0; i < size; i++) {
-            //     let isInside = this.insidePolygon(auxPath[i].latitude, auxPath[i].longitude, aaa);
-            //     if (isInside) {
-            //         auxPath.splice(i, 1);
-            //         size--;
-            //        // this.markers.push(auxPath[i]);
-            //     }
-            // }
-            console.log("size ", auxPath.length);
+            var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
             for (var i = 0; i < auxPath.length; i++) {
                 this.polygonPath.push({lat: auxPath[i].latitude, lng: auxPath[i].longitude});
+            }
+            for (var i = 0; i < auxPath2.length; i++) {
+                this.polygonPath2.push({lat: auxPath2[i].latitude, lng: auxPath2[i].longitude});
             }
         });
     }
@@ -98,16 +96,6 @@ export class MapSpike1Component implements OnInit {
         // Without -1 it would give an array out of bounds error
         var pathSide1: Coordinate[] = [];
         var pathSide2: Coordinate[] = [];
-        var indexeToRemoveSide1: {
-            indexCoordinate1: number,
-            indexCoordinate2: number,
-            intersectionCoordinate: Coordinate
-        }[] = [];
-        var indexeToRemoveSide2: {
-            indexCoordinate1: number,
-            indexCoordinate2: number,
-            intersectionCoordinate: Coordinate
-        }[] = [];
         for (var i = 0; i < path.length - 1; i++) {
             var c1: Coordinate = path[i];
             var c2: Coordinate = path[i + 1];
@@ -119,34 +107,6 @@ export class MapSpike1Component implements OnInit {
             c2Aux1 = c2.destinationPoint(angle + 90, dogSmeelDistanceInKm);
             c2Aux2 = c2.destinationPoint(angle - 90, dogSmeelDistanceInKm);
 
-            //get last line
-            if (i > 0) {
-                //existe last line
-                var dir = this.getTurnDirection(path[i - 1], c1, c1, c2);
-                if (dir === "left") {
-                    var lastC1Aux1 = pathSide1[pathSide1.length - 2]; //as the insertion in this array is to the last position
-                    var lastC2Aux1 = pathSide1[pathSide1.length - 1];
-                    var intersectionSide1 = this.calculateIntersectionPointOf(lastC1Aux1, lastC2Aux1, c1Aux1, c2Aux1);
-                    if (intersectionSide1 != null) {
-                        indexeToRemoveSide1.push({
-                            indexCoordinate1: pathSide1.length - 1,
-                            indexCoordinate2: pathSide1.length,
-                            intersectionCoordinate: intersectionSide1
-                        });
-                    }
-                } else {
-                    var lastC1Aux2 = pathSide2[pathSide2.length - 2]; //as the insertion in this array is in the first positions
-                    var lastC2Aux2 = pathSide2[pathSide2.length - 1];
-                    var intersectionSide2 = this.calculateIntersectionPointOf(lastC1Aux2, lastC2Aux2, c1Aux2, c2Aux2);
-                    if (intersectionSide2 != null) {
-                        indexeToRemoveSide2.push({
-                            indexCoordinate1: pathSide2.length - 1,
-                            indexCoordinate2: pathSide2.length,
-                            intersectionCoordinate: intersectionSide2
-                        });
-                    }
-                }
-            }
             pathSide1.push(c1Aux1);
             pathSide1.push(c2Aux1);
             pathSide2.push(c1Aux2);

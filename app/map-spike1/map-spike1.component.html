@@ -10,6 +10,13 @@
 
     <sebm-map-polygon [paths]="polygonPath"
                       [strokeColor]="polygonConfig.strokeColor"
+                      [strokeWeight]="polygonConfig.strokeWeight"
+                      [fillColor]="polygonConfig.fillColor">
+    </sebm-map-polygon>
+
+    <sebm-map-polygon [paths]="polygonPath2"
+                      [strokeColor]="polygonConfig.strokeColor"
+                      [strokeWeight]="polygonConfig.strokeWeight"
                       [fillColor]="polygonConfig.fillColor">
     </sebm-map-polygon>
 
@@ -22,13 +29,6 @@
 
     <sebm-google-map-polyline [strokeColor]="pathAuxColor">
         <sebm-google-map-polyline-point *ngFor="let coord of pathAux"
-                                        [latitude]="coord.latitude"
-                                        [longitude]="coord.longitude">
-        </sebm-google-map-polyline-point>
-    </sebm-google-map-polyline>
-
-    <sebm-google-map-polyline [strokeColor]="pathColor">
-        <sebm-google-map-polyline-point *ngFor="let coord of path"
                                         [latitude]="coord.latitude"
                                         [longitude]="coord.longitude">
         </sebm-google-map-polyline-point>

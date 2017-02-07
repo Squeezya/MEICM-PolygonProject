@@ -1,5 +1,5 @@
 "use strict";
-var coordinate_1 = require('./../models/coordinate');
+var coordinate_1 = require("./../models/coordinate");
 exports.PATH = [
     new coordinate_1.Coordinate(39.66700079, -8.77305817),
     new coordinate_1.Coordinate(39.76416618, -8.75647468),

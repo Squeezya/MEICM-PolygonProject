@@ -1,0 +1,36 @@
+<h2>Map Spike 1</h2>
+<div class="btn-group-sm mb-1">
+    <button class="btn btn-secondary" (click)="clearPathAux()">Clear Path AUX</button>
+    <button class="btn btn-secondary" (click)="PrintCurrentPathAux()">Print current path AUX</button>
+</div>
+<sebm-google-map [latitude]="mapConfig.lat"
+                 [longitude]="mapConfig.lng"
+                 [zoom]="mapConfig.zoom"
+                 (mapClick)="mapClicked($event)" [scaleControl]="mapConfig.scaleControl">
+
+    <sebm-map-polygon [paths]="polygonPath"
+                      [strokeColor]="polygonConfig.strokeColor"
+                      [fillColor]="polygonConfig.fillColor">
+    </sebm-map-polygon>
+
+    <sebm-google-map-marker
+            *ngFor="let m of markers; let i = index"
+            [latitude]="m.latitude"
+            [longitude]="m.longitude"
+            [label]="a">
+    </sebm-google-map-marker>
+
+    <sebm-google-map-polyline [strokeColor]="pathAuxColor">
+        <sebm-google-map-polyline-point *ngFor="let coord of pathAux"
+                                        [latitude]="coord.latitude"
+                                        [longitude]="coord.longitude">
+        </sebm-google-map-polyline-point>
+    </sebm-google-map-polyline>
+
+    <sebm-google-map-polyline [strokeColor]="pathColor">
+        <sebm-google-map-polyline-point *ngFor="let coord of path"
+                                        [latitude]="coord.latitude"
+                                        [longitude]="coord.longitude">
+        </sebm-google-map-polyline-point>
+    </sebm-google-map-polyline>
+</sebm-google-map>

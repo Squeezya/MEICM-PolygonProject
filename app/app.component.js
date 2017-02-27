@@ -8,7 +8,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var AppComponent = (function () {
     function AppComponent() {
-        this.title = 'Tour of Heroes';
+        this.title = 'GIS4STRAIT';
+        this.routes = [
+            {
+                title: "Dashboard",
+                url: "/dashboard",
+                activeClass: "active"
+            },
+            {
+                title: "Heroes",
+                url: "/heroes",
+                activeClass: "active"
+            },
+            {
+                title: "Map",
+                url: "/map",
+                activeClass: "active"
+            }
+        ];
     }
     return AppComponent;
 }());

@@ -1,0 +1,62 @@
+<div class="row">
+    <div id="mapContainer">
+        <!--Sidebar options-->
+        <div id="map-sidebar-container" [@sidebarContainerState]="sidebarConfig.state">
+            <div id="map-sidebar">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <button class="btn mt-3 btn-primary" type="button" (click)="click()">Click</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="map-sidebar-label" (click)="sidebarToggleState()">
+                <i class="icon fa"
+                   [ngClass]="{'fa-caret-right': !isSidebarVisible(), 'fa-caret-left': isSidebarVisible()}"
+                   aria-hidden="true"></i>
+            </div>
+        </div> <!-- end sidebar options-->
+        <sebm-google-map [latitude]="mapConfig.lat"
+                         [longitude]="mapConfig.lng"
+                         [zoom]="mapConfig.zoom"
+                         [zoomControl]="mapConfig.zoomControl"
+                         [mapTypeControl]="mapConfig.mapTypeControl"
+                         [scaleControl]="mapConfig.scaleControl"
+                         [streetViewControl]="mapConfig.streetViewControl">
+
+            <sebm-map-polygon [paths]="polygonPath"
+                              [strokeColor]="polygonConfig.strokeColor"
+                              [strokeWeight]="polygonConfig.strokeWeight"
+                              [fillColor]="polygonConfig.fillColor">
+            </sebm-map-polygon>
+
+            <sebm-map-polygon [paths]="polygonPath2"
+                              [strokeColor]="polygonConfig.strokeColor"
+                              [strokeWeight]="polygonConfig.strokeWeight"
+                              [fillColor]="polygonConfig.fillColor">
+            </sebm-map-polygon>
+
+            <sebm-google-map-polyline [strokeColor]="pathAuxColor" [strokeWeight]="1">
+                <sebm-google-map-polyline-point *ngFor="let coord of path"
+                                                [latitude]="coord.latitude"
+                                                [longitude]="coord.longitude">
+                </sebm-google-map-polyline-point>
+            </sebm-google-map-polyline>
+
+            <sebm-google-map-marker
+                    *ngFor="let m of markers; let i = index"
+                    [latitude]="m.latitude"
+                    [longitude]="m.longitude"
+                    [label]="a">
+            </sebm-google-map-marker>
+
+            <sebm-google-map-polyline [strokeColor]="pathAuxColor">
+                <sebm-google-map-polyline-point *ngFor="let coord of pathAux"
+                                                [latitude]="coord.latitude"
+                                                [longitude]="coord.longitude">
+                </sebm-google-map-polyline-point>
+            </sebm-google-map-polyline>
+        </sebm-google-map>
+    </div>
+</div>

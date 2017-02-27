@@ -17,7 +17,8 @@ var dashboard_component_1 = require("./dashboard/dashboard.component");
 var hero_service_1 = require("./services/hero.service");
 var coordinate_service_1 = require("./services/coordinate.service");
 var app_routing_module_1 = require("./app-routing.module");
-var map_spike1_component_1 = require("./map-spike1/map-spike1.component");
+var map_component_1 = require("./map/map.component");
+var notfound_component_1 = require("./notfound/notfound.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -39,7 +40,8 @@ AppModule = __decorate([
             hero_detail_component_1.HeroDetailComponent,
             heroes_component_1.HeroesComponent,
             dashboard_component_1.DashboardComponent,
-            map_spike1_component_1.MapSpike1Component
+            map_component_1.MapComponent,
+            notfound_component_1.NotFoundComponent
         ],
         providers: [
             hero_service_1.HeroService,

@@ -10,13 +10,16 @@ var router_1 = require("@angular/router");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
 var heroes_component_1 = require("./heroes/heroes.component");
 var hero_detail_component_1 = require("./hero-detail/hero-detail.component");
-var map_spike1_component_1 = require("./map-spike1/map-spike1.component");
+var map_component_1 = require("./map/map.component");
+var notfound_component_1 = require("./notfound/notfound.component");
 var routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: dashboard_component_1.DashboardComponent },
     { path: 'detail/:id', component: hero_detail_component_1.HeroDetailComponent },
     { path: 'heroes', component: heroes_component_1.HeroesComponent },
-    { path: 'mapspike1', component: map_spike1_component_1.MapSpike1Component }
+    { path: 'map', component: map_component_1.MapComponent },
+    // all other routes and finally at the last add
+    { path: '**', component: notfound_component_1.NotFoundComponent }
 ];
 var AppRoutingModule = (function () {
     function AppRoutingModule() {

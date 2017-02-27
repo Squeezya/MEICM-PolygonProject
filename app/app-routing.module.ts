@@ -3,14 +3,17 @@ import {RouterModule, Routes} from '@angular/router';
 import {DashboardComponent}   from './dashboard/dashboard.component';
 import {HeroesComponent}      from './heroes/heroes.component';
 import {HeroDetailComponent}  from './hero-detail/hero-detail.component';
-import {MapSpike1Component}  from './map-spike1/map-spike1.component';
+import {MapComponent}  from './map/map.component';
+import {NotFoundComponent}  from './notfound/notfound.component';
 
 const routes: Routes = [
     {path: '', redirectTo: '/dashboard', pathMatch: 'full'},
     {path: 'dashboard', component: DashboardComponent},
     {path: 'detail/:id', component: HeroDetailComponent},
     {path: 'heroes', component: HeroesComponent},
-    {path: 'mapspike1', component: MapSpike1Component}
+    {path: 'map', component: MapComponent},
+    // all other routes and finally at the last add
+    {path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({

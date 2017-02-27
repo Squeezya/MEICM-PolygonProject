@@ -12,7 +12,8 @@ import {DashboardComponent} from './dashboard/dashboard.component';
 import {HeroService} from './services/hero.service';
 import {CoordinateService} from './services/coordinate.service';
 import {AppRoutingModule} from './app-routing.module';
-import {MapSpike1Component} from './map-spike1/map-spike1.component';
+import {MapComponent} from './map/map.component';
+import {NotFoundComponent} from './notfound/notfound.component';
 
 @NgModule({
     imports: [
@@ -29,7 +30,8 @@ import {MapSpike1Component} from './map-spike1/map-spike1.component';
         HeroDetailComponent,
         HeroesComponent,
         DashboardComponent,
-        MapSpike1Component
+        MapComponent,
+        NotFoundComponent
     ],
     providers: [
         HeroService,

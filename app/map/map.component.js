@@ -8,18 +8,24 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var core_1 = require('@angular/core');
-var coordinate_1 = require('./../models/coordinate');
-var coordinate_service_1 = require('./../services/coordinate.service');
-var MapSpike1Component = (function () {
-    function MapSpike1Component(coordinateService) {
+var core_1 = require("@angular/core");
+var coordinate_1 = require("./../models/coordinate");
+var coordinate_service_1 = require("./../services/coordinate.service");
+var MapComponent = (function () {
+    function MapComponent(coordinateService) {
         this.coordinateService = coordinateService;
         this.a = "s";
+        this.sidebarConfig = {
+            state: "active"
+        };
         this.mapConfig = {
             lat: 39.740159,
             lng: -8.797335,
             zoom: 16,
-            scaleControl: true
+            scaleControl: true,
+            zoomControl: true,
+            mapTypeControl: true,
+            streetViewControl: false
         };
         this.polygonConfig = {
             strokeColor: "#8ab5e3",
@@ -27,7 +33,7 @@ var MapSpike1Component = (function () {
             strokeWeight: 0
         };
     }
-    MapSpike1Component.prototype.ngOnInit = function () {
+    MapComponent.prototype.ngOnInit = function () {
         this.pathAux = [];
         this.markers = [];
         this.polygonPath = [];
@@ -36,7 +42,21 @@ var MapSpike1Component = (function () {
         this.pathColor = "#FF0000";
         this.getPath(3);
     };
-    MapSpike1Component.prototype.getPath = function (index) {
+    MapComponent.prototype.click = function () {
+        console.log(document.querySelector('.sebm-google-map-container-inner'));
+    };
+    MapComponent.prototype.sidebarToggleState = function () {
+        if (this.isSidebarVisible()) {
+            this.sidebarConfig.state = 'inactive';
+        }
+        else {
+            this.sidebarConfig.state = 'active';
+        }
+    };
+    MapComponent.prototype.isSidebarVisible = function () {
+        return this.sidebarConfig.state === "active";
+    };
+    MapComponent.prototype.getPath = function (index) {
         var _this = this;
         this.coordinateService.getPath(index).then(function (path) {
             _this.path = path;
@@ -55,13 +75,13 @@ var MapSpike1Component = (function () {
             }
         });
     };
-    MapSpike1Component.prototype.clearPathAux = function () {
+    MapComponent.prototype.clearPathAux = function () {
         this.pathAux.length = 0;
     };
-    MapSpike1Component.prototype.mapClicked = function ($event) {
+    MapComponent.prototype.mapClicked = function ($event) {
         this.pathAux.push(new coordinate_1.Coordinate($event.x, $event.y));
     };
-    MapSpike1Component.prototype.PrintCurrentPathAux = function () {
+    MapComponent.prototype.PrintCurrentPathAux = function () {
         var output = "[\n";
         for (var _i = 0, _a = this.pathAux; _i < _a.length; _i++) {
             var coordinate = _a[_i];
@@ -70,7 +90,7 @@ var MapSpike1Component = (function () {
         output += "]\n";
         console.log(output);
     };
-    MapSpike1Component.prototype.getRawPolygonPath = function (path, dogSmeelDistanceInKm) {
+    MapComponent.prototype.getRawPolygonPath = function (path, dogSmeelDistanceInKm) {
         // for path.length - 1 because on each iteration we will fetch the next one.
         // Without -1 it would give an array out of bounds error
         var pathSide1 = [];
@@ -90,63 +110,11 @@ var MapSpike1Component = (function () {
             pathSide2.push(c1Aux2);
             pathSide2.push(c2Aux2);
         }
-        // for (var i = 0; i < indexeToRemoveSide1.length; i++) {
-        //     pathSide1[indexeToRemoveSide1[i].indexCoordinate2 - i] = indexeToRemoveSide1[i].intersectionCoordinate;
-        //     pathSide1.splice(indexeToRemoveSide1[i].indexCoordinate1 - i, 1);
-        // }
-        //
-        // for (var i = 0; i < indexeToRemoveSide2.length; i++) {
-        //     pathSide2[indexeToRemoveSide2[i].indexCoordinate2 - i] = indexeToRemoveSide2[i].intersectionCoordinate;
-        //     pathSide2.splice(indexeToRemoveSide2[i].indexCoordinate1 - i, 1);
-        // }
-        //so the path is a polygon that closes at the beginning.
         pathSide2 = pathSide2.reverse();
         var polygonPath = pathSide1.concat(pathSide2);
         return polygonPath;
     };
-    MapSpike1Component.prototype.getTurnDirection = function (l1c1, l1c2, l2c1, l2c2) {
-        var direction = "";
-        var angleLine1 = l1c1.angleFromCoordinate(l1c2);
-        var angleLine2 = l2c1.angleFromCoordinate(l2c2);
-        if (angleLine2 < angleLine1) {
-            //direita
-            direction = "right";
-        }
-        else {
-            //esquerda
-            direction = "left";
-        }
-        return direction;
-    };
-    MapSpike1Component.prototype.calculateIntersectionPointOf = function (line1C1, line1C2, line2C1, line2C2) {
-        var coordinateIntersection;
-        var l1x1 = line1C1.latitude;
-        var l1x2 = line1C2.latitude;
-        var l1y1 = line1C1.longitude;
-        var l1y2 = line1C2.longitude;
-        var l2x1 = line2C1.latitude;
-        var l2x2 = line2C2.latitude;
-        var l2y1 = line2C1.longitude;
-        var l2y2 = line2C2.longitude;
-        var l1a = l1y2 - l1y1;
-        var l1b = l1x1 - l1x2;
-        var l1c = l1a * l1x1 + l1b * l1y1;
-        var l2a = l2y2 - l2y1;
-        var l2b = l2x1 - l2x2;
-        var l2c = l2a * l2x1 + l2b * l2y1;
-        var det = l1a * l2b - l2a * l1b;
-        if (det == 0) {
-            //error
-            coordinateIntersection = null;
-        }
-        else {
-            var x = (l2b * l1c - l1b * l2c) / det;
-            var y = (l1a * l2c - l2a * l1c) / det;
-            coordinateIntersection = new coordinate_1.Coordinate(x, y);
-        }
-        return coordinateIntersection;
-    };
-    MapSpike1Component.prototype.insidePolygon = function (latitude, longitude, vs) {
+    MapComponent.prototype.insidePolygon = function (latitude, longitude, vs) {
         // ray-casting algorithm based on
         // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
         var inside = false;
@@ -161,16 +129,29 @@ var MapSpike1Component = (function () {
         return inside;
     };
     ;
-    MapSpike1Component = __decorate([
-        core_1.Component({
-            moduleId: module.id,
-            selector: 'my-map-spike1',
-            templateUrl: 'map-spike1.component.html',
-            styleUrls: ['map-spike1.component.css']
-        }), 
-        __metadata('design:paramtypes', [coordinate_service_1.CoordinateService])
-    ], MapSpike1Component);
-    return MapSpike1Component;
+    return MapComponent;
 }());
-exports.MapSpike1Component = MapSpike1Component;
-//# sourceMappingURL=map-spike1.component.js.map
+MapComponent = __decorate([
+    core_1.Component({
+        moduleId: module.id,
+        selector: 'map',
+        templateUrl: 'map.component.html',
+        styleUrls: ['map.component.css'],
+        animations: [
+            core_1.trigger('sidebarContainerState', [
+                core_1.state('inactive', core_1.style({
+                    'left': "-408px"
+                })),
+                core_1.state('active', core_1.style({
+                    left: "0px",
+                    'box-shadow': "0 0 20px rgba(0,0,0,0.3)"
+                })),
+                core_1.transition('inactive => active', core_1.animate('130ms ease-in')),
+                core_1.transition('active => inactive', core_1.animate('130ms ease-out'))
+            ])
+        ]
+    }),
+    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService])
+], MapComponent);
+exports.MapComponent = MapComponent;
+//# sourceMappingURL=map.component.js.map

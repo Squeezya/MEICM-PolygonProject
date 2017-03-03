@@ -9,7 +9,6 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var coordinate_1 = require("./../models/coordinate");
 var coordinate_service_1 = require("./../services/coordinate.service");
 var MapComponent = (function () {
     function MapComponent(coordinateService) {
@@ -34,16 +33,20 @@ var MapComponent = (function () {
         };
     }
     MapComponent.prototype.ngOnInit = function () {
-        this.pathAux = [];
-        this.markers = [];
         this.polygonPath = [];
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getPath(3);
+        this.getSweepsForOperation("5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e");
     };
-    MapComponent.prototype.click = function () {
-        console.log(document.querySelector('.sebm-google-map-container-inner'));
+    MapComponent.prototype.getSweepsForOperation = function (operationId) {
+        var _this = this;
+        this.coordinateService.getSweepsForOperation(operationId)
+            .subscribe(function (sweeps) { return _this.process(sweeps); }, function (error) { return _this.errorMessage = error; });
+    };
+    MapComponent.prototype.process = function (sweeps) {
+        this.sweeps = sweeps;
+        this.parseSweepsToPolygons(this.sweeps[0]);
     };
     MapComponent.prototype.sidebarToggleState = function () {
         if (this.isSidebarVisible()) {
@@ -56,39 +59,21 @@ var MapComponent = (function () {
     MapComponent.prototype.isSidebarVisible = function () {
         return this.sidebarConfig.state === "active";
     };
-    MapComponent.prototype.getPath = function (index) {
-        var _this = this;
-        this.coordinateService.getPath(index).then(function (path) {
-            _this.path = path;
-            //center map on the beginning of the path
-            _this.mapConfig.lat = _this.path[0].latitude;
-            _this.mapConfig.lng = _this.path[0].longitude;
-            _this.polygonPath = [];
-            _this.polygonPath2 = [];
-            var auxPath = _this.getRawPolygonPath(_this.path, 0.008);
-            var auxPath2 = _this.getRawPolygonPath(_this.path, 0.016);
-            for (var i = 0; i < auxPath.length; i++) {
-                _this.polygonPath.push({ lat: auxPath[i].latitude, lng: auxPath[i].longitude });
-            }
-            for (var i = 0; i < auxPath2.length; i++) {
-                _this.polygonPath2.push({ lat: auxPath2[i].latitude, lng: auxPath2[i].longitude });
-            }
-        });
-    };
-    MapComponent.prototype.clearPathAux = function () {
-        this.pathAux.length = 0;
-    };
-    MapComponent.prototype.mapClicked = function ($event) {
-        this.pathAux.push(new coordinate_1.Coordinate($event.x, $event.y));
-    };
-    MapComponent.prototype.PrintCurrentPathAux = function () {
-        var output = "[\n";
-        for (var _i = 0, _a = this.pathAux; _i < _a.length; _i++) {
-            var coordinate = _a[_i];
-            output += coordinate.toStringProg() + "\n";
+    MapComponent.prototype.parseSweepsToPolygons = function (sweep) {
+        this.path = sweep.path;
+        //center map on the beginning of the path
+        this.mapConfig.lat = this.path[0].latitude;
+        this.mapConfig.lng = this.path[0].longitude;
+        this.polygonPath = [];
+        this.polygonPath2 = [];
+        var auxPath = this.getRawPolygonPath(this.path, 0.008);
+        var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
+        for (var i = 0; i < auxPath.length; i++) {
+            this.polygonPath.push({ lat: auxPath[i].latitude, lng: auxPath[i].longitude });
         }
-        output += "]\n";
-        console.log(output);
+        for (var i = 0; i < auxPath2.length; i++) {
+            this.polygonPath2.push({ lat: auxPath2[i].latitude, lng: auxPath2[i].longitude });
+        }
     };
     MapComponent.prototype.getRawPolygonPath = function (path, dogSmeelDistanceInKm) {
         // for path.length - 1 because on each iteration we will fetch the next one.

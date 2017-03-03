@@ -12,6 +12,7 @@ import {Coordinate} from './../models/coordinate';
 import {CoordinateService} from './../services/coordinate.service';
 
 import {LatLngLiteral} from 'angular2-google-maps/core';
+import {Sweep} from "../models/sweep";
 
 @Component({
     moduleId: module.id,
@@ -39,8 +40,6 @@ export class MapComponent implements OnInit {
     pathColor: string;
     polygonPath: Array<LatLngLiteral>;
     polygonPath2: Array<LatLngLiteral>;
-    pathAux: Coordinate[];
-    markers: Coordinate[];
     pathAuxColor: string;
 
     sidebarConfig: {
@@ -76,21 +75,31 @@ export class MapComponent implements OnInit {
         strokeWeight: 0
     };
 
+    errorMessage: string;
+    sweeps: Sweep[];
+
     constructor(private coordinateService: CoordinateService) {
     }
 
     ngOnInit(): void {
-        this.pathAux = [];
-        this.markers = [];
         this.polygonPath = [];
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getPath(3);
+        this.getSweepsForOperation("5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e");
+
     }
 
-    click(): void {
-        console.log(document.querySelector('.sebm-google-map-container-inner'));
+    getSweepsForOperation(operationId: string) {
+        this.coordinateService.getSweepsForOperation(operationId)
+            .subscribe(
+                sweeps => this.process(sweeps),
+                error => this.errorMessage = <any>error);
+    }
+
+    process(sweeps: Sweep[]) {
+        this.sweeps = sweeps;
+        this.parseSweepsToPolygons(this.sweeps[0]);
     }
 
     sidebarToggleState(): void {
@@ -105,40 +114,21 @@ export class MapComponent implements OnInit {
         return this.sidebarConfig.state === "active";
     }
 
-    getPath(index: number): void {
-        this.coordinateService.getPath(index).then(path => {
-            this.path = path;
-            //center map on the beginning of the path
-            this.mapConfig.lat = this.path[0].latitude;
-            this.mapConfig.lng = this.path[0].longitude;
-            this.polygonPath = [];
-            this.polygonPath2 = [];
-            var auxPath = this.getRawPolygonPath(this.path, 0.008);
-            var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
-            for (var i = 0; i < auxPath.length; i++) {
-                this.polygonPath.push({lat: auxPath[i].latitude, lng: auxPath[i].longitude});
-            }
-            for (var i = 0; i < auxPath2.length; i++) {
-                this.polygonPath2.push({lat: auxPath2[i].latitude, lng: auxPath2[i].longitude});
-            }
-        });
-    }
-
-    clearPathAux(): void {
-        this.pathAux.length = 0;
-    }
-
-    mapClicked($event: MouseEvent) {
-        this.pathAux.push(new Coordinate($event.x, $event.y));
-    }
-
-    PrintCurrentPathAux(): void {
-        var output = "[\n";
-        for (let coordinate of this.pathAux) {
-            output += coordinate.toStringProg() + "\n";
+    parseSweepsToPolygons(sweep: Sweep): void {
+        this.path = sweep.path;
+        //center map on the beginning of the path
+        this.mapConfig.lat = this.path[0].latitude;
+        this.mapConfig.lng = this.path[0].longitude;
+        this.polygonPath = [];
+        this.polygonPath2 = [];
+        var auxPath = this.getRawPolygonPath(this.path, 0.008);
+        var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
+        for (var i = 0; i < auxPath.length; i++) {
+            this.polygonPath.push({lat: auxPath[i].latitude, lng: auxPath[i].longitude});
         }
-        output += "]\n";
-        console.log(output);
+        for (var i = 0; i < auxPath2.length; i++) {
+            this.polygonPath2.push({lat: auxPath2[i].latitude, lng: auxPath2[i].longitude});
+        }
     }
 
     getRawPolygonPath(path: Coordinate[], dogSmeelDistanceInKm: number): Coordinate[] {

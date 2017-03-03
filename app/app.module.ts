@@ -9,11 +9,13 @@ import {AppComponent} from './app.component';
 import {HeroDetailComponent} from './hero-detail/hero-detail.component';
 import {HeroesComponent} from './heroes/heroes.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
+import {ConfigurationService} from './services/configuration.service';
 import {HeroService} from './services/hero.service';
 import {CoordinateService} from './services/coordinate.service';
 import {AppRoutingModule} from './app-routing.module';
 import {MapComponent} from './map/map.component';
 import {NotFoundComponent} from './notfound/notfound.component';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
     imports: [
@@ -23,7 +25,8 @@ import {NotFoundComponent} from './notfound/notfound.component';
         NgbModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
-        })
+        }),
+        HttpModule
     ],
     declarations: [
         AppComponent,
@@ -34,6 +37,7 @@ import {NotFoundComponent} from './notfound/notfound.component';
         NotFoundComponent
     ],
     providers: [
+        ConfigurationService,
         HeroService,
         CoordinateService
     ],

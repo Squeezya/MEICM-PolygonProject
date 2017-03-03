@@ -7,6 +7,14 @@ export class Coordinate {
         this.longitude = longitude;
     }
 
+    public static fromObject(path: any): Coordinate[] {
+        let result: Coordinate[] = [];
+        for( let i = 0; i < path.length; i++) {
+            result.push(new Coordinate(path[i].latitude, path[i].longitude));
+        }
+        return result;
+    }
+
     destinationPoint(bearing: number, distance: number): Coordinate {
         var earthMeanRadius = 6371;
         distance = distance / earthMeanRadius;

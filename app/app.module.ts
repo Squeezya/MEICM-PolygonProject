@@ -9,6 +9,7 @@ import {AppComponent} from './app.component';
 import {HeroDetailComponent} from './hero-detail/hero-detail.component';
 import {HeroesComponent} from './heroes/heroes.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
+import {ConfigurationService} from './services/configuration.service';
 import {HeroService} from './services/hero.service';
 import {CoordinateService} from './services/coordinate.service';
 import {AppRoutingModule} from './app-routing.module';
@@ -36,6 +37,7 @@ import { HttpModule } from '@angular/http';
         NotFoundComponent
     ],
     providers: [
+        ConfigurationService,
         HeroService,
         CoordinateService
     ],

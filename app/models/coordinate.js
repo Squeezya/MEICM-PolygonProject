@@ -4,6 +4,13 @@ var Coordinate = (function () {
         this.latitude = latitude;
         this.longitude = longitude;
     }
+    Coordinate.fromObject = function (path) {
+        var result = [];
+        for (var i = 0; i < path.length; i++) {
+            result.push(new Coordinate(path[i].latitude, path[i].longitude));
+        }
+        return result;
+    };
     Coordinate.prototype.destinationPoint = function (bearing, distance) {
         var earthMeanRadius = 6371;
         distance = distance / earthMeanRadius;

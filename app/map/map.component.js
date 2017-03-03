@@ -10,12 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var coordinate_service_1 = require("./../services/coordinate.service");
-var http_1 = require("@angular/http");
-require("rxjs/add/operator/toPromise");
 var MapComponent = (function () {
-    function MapComponent(coordinateService, http) {
+    function MapComponent(coordinateService) {
         this.coordinateService = coordinateService;
-        this.http = http;
         this.a = "s";
         this.sidebarConfig = {
             state: "active"
@@ -40,34 +37,16 @@ var MapComponent = (function () {
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        var headers = new http_1.Headers();
-        headers.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YmYyYWMzMC1mZjcxLTExZTYtYjViOC0zZDkwNGM3M2EzNTgiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvdjFcL2xvZ2luIiwiaWF0IjoxNDg4NTQ2NjAwLCJleHAiOjE0ODg1NTAyMDAsIm5iZiI6MTQ4ODU0NjYwMCwianRpIjoiNTQ1MzIyMzI2MGM1ZjA3N2EzYThiNjJlMDYyNjY4ZGQifQ.yyRyxwZu9V4nH89iPqFs71Ar3N2-GnD8FYRrLAbBArw');
-        this.http.get('http://localhost:8000/v1/operations/5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e/sweeps', {
-            headers: headers
-        })
-            .toPromise()
-            .then(this.test)
-            .catch(this.handleError);
+        this.getSweepsForOperation("5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e");
     };
-    MapComponent.prototype.test = function (res) {
-        var body = res.json();
-        console.log(body);
-        return body || {};
+    MapComponent.prototype.getSweepsForOperation = function (operationId) {
+        var _this = this;
+        this.coordinateService.getSweepsForOperation(operationId)
+            .subscribe(function (sweeps) { return _this.process(sweeps); }, function (error) { return _this.errorMessage = error; });
     };
-    MapComponent.prototype.handleError = function (error) {
-        // In a real world app, we might use a remote logging infrastructure
-        var errMsg;
-        if (error instanceof http_1.Response) {
-            var body = error.json() || '';
-            var err = body.error || JSON.stringify(body);
-            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
-        }
-        else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.log(error);
-        console.error(errMsg);
-        return Promise.reject(errMsg);
+    MapComponent.prototype.process = function (sweeps) {
+        this.sweeps = sweeps;
+        this.parseSweepsToPolygons(this.sweeps[0]);
     };
     MapComponent.prototype.sidebarToggleState = function () {
         if (this.isSidebarVisible()) {
@@ -80,24 +59,21 @@ var MapComponent = (function () {
     MapComponent.prototype.isSidebarVisible = function () {
         return this.sidebarConfig.state === "active";
     };
-    MapComponent.prototype.getPath = function (index) {
-        var _this = this;
-        this.coordinateService.getPath(index).then(function (path) {
-            _this.path = path;
-            //center map on the beginning of the path
-            _this.mapConfig.lat = _this.path[0].latitude;
-            _this.mapConfig.lng = _this.path[0].longitude;
-            _this.polygonPath = [];
-            _this.polygonPath2 = [];
-            var auxPath = _this.getRawPolygonPath(_this.path, 0.008);
-            var auxPath2 = _this.getRawPolygonPath(_this.path, 0.016);
-            for (var i = 0; i < auxPath.length; i++) {
-                _this.polygonPath.push({ lat: auxPath[i].latitude, lng: auxPath[i].longitude });
-            }
-            for (var i = 0; i < auxPath2.length; i++) {
-                _this.polygonPath2.push({ lat: auxPath2[i].latitude, lng: auxPath2[i].longitude });
-            }
-        });
+    MapComponent.prototype.parseSweepsToPolygons = function (sweep) {
+        this.path = sweep.path;
+        //center map on the beginning of the path
+        this.mapConfig.lat = this.path[0].latitude;
+        this.mapConfig.lng = this.path[0].longitude;
+        this.polygonPath = [];
+        this.polygonPath2 = [];
+        var auxPath = this.getRawPolygonPath(this.path, 0.008);
+        var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
+        for (var i = 0; i < auxPath.length; i++) {
+            this.polygonPath.push({ lat: auxPath[i].latitude, lng: auxPath[i].longitude });
+        }
+        for (var i = 0; i < auxPath2.length; i++) {
+            this.polygonPath2.push({ lat: auxPath2[i].latitude, lng: auxPath2[i].longitude });
+        }
     };
     MapComponent.prototype.getRawPolygonPath = function (path, dogSmeelDistanceInKm) {
         // for path.length - 1 because on each iteration we will fetch the next one.
@@ -160,7 +136,7 @@ MapComponent = __decorate([
             ])
         ]
     }),
-    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService, http_1.Http])
+    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService])
 ], MapComponent);
 exports.MapComponent = MapComponent;
 //# sourceMappingURL=map.component.js.map

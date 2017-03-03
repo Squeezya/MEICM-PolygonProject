@@ -12,9 +12,7 @@ import {Coordinate} from './../models/coordinate';
 import {CoordinateService} from './../services/coordinate.service';
 
 import {LatLngLiteral} from 'angular2-google-maps/core';
-
-import { Http, Response, Headers }          from '@angular/http';
-import 'rxjs/add/operator/toPromise';
+import {Sweep} from "../models/sweep";
 
 @Component({
     moduleId: module.id,
@@ -77,7 +75,10 @@ export class MapComponent implements OnInit {
         strokeWeight: 0
     };
 
-    constructor(private coordinateService: CoordinateService, private http: Http) {
+    errorMessage: string;
+    sweeps: Sweep[];
+
+    constructor(private coordinateService: CoordinateService) {
     }
 
     ngOnInit(): void {
@@ -85,36 +86,20 @@ export class MapComponent implements OnInit {
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        let headers = new Headers();
-        headers.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YmYyYWMzMC1mZjcxLTExZTYtYjViOC0zZDkwNGM3M2EzNTgiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvdjFcL2xvZ2luIiwiaWF0IjoxNDg4NTQ2NjAwLCJleHAiOjE0ODg1NTAyMDAsIm5iZiI6MTQ4ODU0NjYwMCwianRpIjoiNTQ1MzIyMzI2MGM1ZjA3N2EzYThiNjJlMDYyNjY4ZGQifQ.yyRyxwZu9V4nH89iPqFs71Ar3N2-GnD8FYRrLAbBArw');
-        this.http.get('http://localhost:8000/v1/operations/5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e/sweeps', {
-            headers: headers
-        })
-            .toPromise()
-            .then(this.test)
-            .catch(this.handleError);
+        this.getSweepsForOperation("5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e");
+
     }
 
-    private test(res: Response) {
-        let body = res.json();
-        console.log(body);
-        return body || { };
+    getSweepsForOperation(operationId: string) {
+        this.coordinateService.getSweepsForOperation(operationId)
+            .subscribe(
+                sweeps => this.process(sweeps),
+                error => this.errorMessage = <any>error);
     }
 
-    private handleError (error: Response | any) {
-        // In a real world app, we might use a remote logging infrastructure
-        let errMsg: string;
-        if (error instanceof Response) {
-            const body = error.json() || '';
-            const err = body.error || JSON.stringify(body);
-            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
-        } else {
-            errMsg = error.message ? error.message : error.toString();
-        }
-        console.log(error);
-
-        console.error(errMsg);
-        return Promise.reject(errMsg);
+    process(sweeps: Sweep[]) {
+        this.sweeps = sweeps;
+        this.parseSweepsToPolygons(this.sweeps[0]);
     }
 
     sidebarToggleState(): void {
@@ -129,23 +114,21 @@ export class MapComponent implements OnInit {
         return this.sidebarConfig.state === "active";
     }
 
-    getPath(index: number): void {
-        this.coordinateService.getPath(index).then(path => {
-            this.path = path;
-            //center map on the beginning of the path
-            this.mapConfig.lat = this.path[0].latitude;
-            this.mapConfig.lng = this.path[0].longitude;
-            this.polygonPath = [];
-            this.polygonPath2 = [];
-            var auxPath = this.getRawPolygonPath(this.path, 0.008);
-            var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
-            for (var i = 0; i < auxPath.length; i++) {
-                this.polygonPath.push({lat: auxPath[i].latitude, lng: auxPath[i].longitude});
-            }
-            for (var i = 0; i < auxPath2.length; i++) {
-                this.polygonPath2.push({lat: auxPath2[i].latitude, lng: auxPath2[i].longitude});
-            }
-        });
+    parseSweepsToPolygons(sweep: Sweep): void {
+        this.path = sweep.path;
+        //center map on the beginning of the path
+        this.mapConfig.lat = this.path[0].latitude;
+        this.mapConfig.lng = this.path[0].longitude;
+        this.polygonPath = [];
+        this.polygonPath2 = [];
+        var auxPath = this.getRawPolygonPath(this.path, 0.008);
+        var auxPath2 = this.getRawPolygonPath(this.path, 0.016);
+        for (var i = 0; i < auxPath.length; i++) {
+            this.polygonPath.push({lat: auxPath[i].latitude, lng: auxPath[i].longitude});
+        }
+        for (var i = 0; i < auxPath2.length; i++) {
+            this.polygonPath2.push({lat: auxPath2[i].latitude, lng: auxPath2[i].longitude});
+        }
     }
 
     getRawPolygonPath(path: Coordinate[], dogSmeelDistanceInKm: number): Coordinate[] {

@@ -14,7 +14,7 @@ var app_component_1 = require("./app.component");
 var hero_detail_component_1 = require("./hero-detail/hero-detail.component");
 var heroes_component_1 = require("./heroes/heroes.component");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
-var configuration_service_1 = require("./services/configuration.service");
+var app_service_1 = require("./config/app.service");
 var hero_service_1 = require("./services/hero.service");
 var coordinate_service_1 = require("./services/coordinate.service");
 var app_routing_module_1 = require("./app-routing.module");
@@ -47,7 +47,7 @@ AppModule = __decorate([
             notfound_component_1.NotFoundComponent
         ],
         providers: [
-            configuration_service_1.ConfigurationService,
+            app_service_1.AppSettings,
             hero_service_1.HeroService,
             coordinate_service_1.CoordinateService
         ],

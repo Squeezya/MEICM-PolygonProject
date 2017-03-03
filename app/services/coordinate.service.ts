@@ -5,7 +5,9 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/exhaustMap';
 
-import {Sweep} from './../models/sweep';
+import {AppSettings} from '../config/app.service';
+
+import {Sweep} from '../models/sweep';
 
 @Injectable()
 export class CoordinateService {
@@ -16,10 +18,11 @@ export class CoordinateService {
     getSweepsForOperation(operationId: string): Observable<Sweep[]> {
         console.log();
         let headers = new Headers();
-        headers.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YmYyYWMzMC1mZjcxLTExZTYtYjViOC0zZDkwNGM3M2EzNTgiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvdjFcL2xvZ2luIiwiaWF0IjoxNDg4NTUwNjA3LCJleHAiOjE0ODk3NjAyMDcsIm5iZiI6MTQ4ODU1MDYwNywianRpIjoiMWY5YjNiNzUyNGQxNjU0YzM1YjQ4ZmUwYzg0MDZjMzEifQ.8UVnSbtDQugzYdABmLtjwGDAgCoBDtNSMuuh4hKLGys');
+        headers.append('Authorization', AppSettings.TOKEN);
 
-        return this.http.get('http://localhost:8000/v1/operations/' + operationId + '/sweeps', {headers: headers})
-            .map(this.extractData)
+        return this.http.get(AppSettings.API_ENDPOINT + AppSettings.API_VERSION +
+            'operations/' + operationId + '/sweeps', {headers: headers}
+        ).map(this.extractData)
             .catch(this.handleError);
     }
 

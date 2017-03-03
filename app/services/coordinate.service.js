@@ -14,7 +14,8 @@ var Observable_1 = require("rxjs/Observable");
 require("rxjs/add/operator/catch");
 require("rxjs/add/operator/map");
 require("rxjs/add/operator/exhaustMap");
-var sweep_1 = require("./../models/sweep");
+var app_service_1 = require("../config/app.service");
+var sweep_1 = require("../models/sweep");
 var CoordinateService = (function () {
     function CoordinateService(http) {
         this.http = http;
@@ -22,9 +23,9 @@ var CoordinateService = (function () {
     CoordinateService.prototype.getSweepsForOperation = function (operationId) {
         console.log();
         var headers = new http_1.Headers();
-        headers.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YmYyYWMzMC1mZjcxLTExZTYtYjViOC0zZDkwNGM3M2EzNTgiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvdjFcL2xvZ2luIiwiaWF0IjoxNDg4NTUwNjA3LCJleHAiOjE0ODk3NjAyMDcsIm5iZiI6MTQ4ODU1MDYwNywianRpIjoiMWY5YjNiNzUyNGQxNjU0YzM1YjQ4ZmUwYzg0MDZjMzEifQ.8UVnSbtDQugzYdABmLtjwGDAgCoBDtNSMuuh4hKLGys');
-        return this.http.get('http://localhost:8000/v1/operations/' + operationId + '/sweeps', { headers: headers })
-            .map(this.extractData)
+        headers.append('Authorization', app_service_1.AppSettings.TOKEN);
+        return this.http.get(app_service_1.AppSettings.API_ENDPOINT + app_service_1.AppSettings.API_VERSION +
+            'operations/' + operationId + '/sweeps', { headers: headers }).map(this.extractData)
             .catch(this.handleError);
     };
     CoordinateService.prototype.extractData = function (res) {

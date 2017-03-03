@@ -14,6 +14,7 @@ import {CoordinateService} from './services/coordinate.service';
 import {AppRoutingModule} from './app-routing.module';
 import {MapComponent} from './map/map.component';
 import {NotFoundComponent} from './notfound/notfound.component';
+import { HttpModule } from '@angular/http';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import {NotFoundComponent} from './notfound/notfound.component';
         NgbModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
-        })
+        }),
+        HttpModule
     ],
     declarations: [
         AppComponent,

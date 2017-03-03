@@ -9,11 +9,13 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require("@angular/core");
-var coordinate_1 = require("./../models/coordinate");
 var coordinate_service_1 = require("./../services/coordinate.service");
+var http_1 = require("@angular/http");
+require("rxjs/add/operator/toPromise");
 var MapComponent = (function () {
-    function MapComponent(coordinateService) {
+    function MapComponent(coordinateService, http) {
         this.coordinateService = coordinateService;
+        this.http = http;
         this.a = "s";
         this.sidebarConfig = {
             state: "active"
@@ -34,16 +36,38 @@ var MapComponent = (function () {
         };
     }
     MapComponent.prototype.ngOnInit = function () {
-        this.pathAux = [];
-        this.markers = [];
         this.polygonPath = [];
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getPath(3);
+        var headers = new http_1.Headers();
+        headers.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YmYyYWMzMC1mZjcxLTExZTYtYjViOC0zZDkwNGM3M2EzNTgiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvdjFcL2xvZ2luIiwiaWF0IjoxNDg4NTQ2NjAwLCJleHAiOjE0ODg1NTAyMDAsIm5iZiI6MTQ4ODU0NjYwMCwianRpIjoiNTQ1MzIyMzI2MGM1ZjA3N2EzYThiNjJlMDYyNjY4ZGQifQ.yyRyxwZu9V4nH89iPqFs71Ar3N2-GnD8FYRrLAbBArw');
+        this.http.get('http://localhost:8000/v1/operations/5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e/sweeps', {
+            headers: headers
+        })
+            .toPromise()
+            .then(this.test)
+            .catch(this.handleError);
     };
-    MapComponent.prototype.click = function () {
-        console.log(document.querySelector('.sebm-google-map-container-inner'));
+    MapComponent.prototype.test = function (res) {
+        var body = res.json();
+        console.log(body);
+        return body || {};
+    };
+    MapComponent.prototype.handleError = function (error) {
+        // In a real world app, we might use a remote logging infrastructure
+        var errMsg;
+        if (error instanceof http_1.Response) {
+            var body = error.json() || '';
+            var err = body.error || JSON.stringify(body);
+            errMsg = error.status + " - " + (error.statusText || '') + " " + err;
+        }
+        else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.log(error);
+        console.error(errMsg);
+        return Promise.reject(errMsg);
     };
     MapComponent.prototype.sidebarToggleState = function () {
         if (this.isSidebarVisible()) {
@@ -74,21 +98,6 @@ var MapComponent = (function () {
                 _this.polygonPath2.push({ lat: auxPath2[i].latitude, lng: auxPath2[i].longitude });
             }
         });
-    };
-    MapComponent.prototype.clearPathAux = function () {
-        this.pathAux.length = 0;
-    };
-    MapComponent.prototype.mapClicked = function ($event) {
-        this.pathAux.push(new coordinate_1.Coordinate($event.x, $event.y));
-    };
-    MapComponent.prototype.PrintCurrentPathAux = function () {
-        var output = "[\n";
-        for (var _i = 0, _a = this.pathAux; _i < _a.length; _i++) {
-            var coordinate = _a[_i];
-            output += coordinate.toStringProg() + "\n";
-        }
-        output += "]\n";
-        console.log(output);
     };
     MapComponent.prototype.getRawPolygonPath = function (path, dogSmeelDistanceInKm) {
         // for path.length - 1 because on each iteration we will fetch the next one.
@@ -151,7 +160,7 @@ MapComponent = __decorate([
             ])
         ]
     }),
-    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService])
+    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService, http_1.Http])
 ], MapComponent);
 exports.MapComponent = MapComponent;
 //# sourceMappingURL=map.component.js.map

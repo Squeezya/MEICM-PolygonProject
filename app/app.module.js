@@ -19,6 +19,7 @@ var coordinate_service_1 = require("./services/coordinate.service");
 var app_routing_module_1 = require("./app-routing.module");
 var map_component_1 = require("./map/map.component");
 var notfound_component_1 = require("./notfound/notfound.component");
+var http_1 = require("@angular/http");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -33,7 +34,8 @@ AppModule = __decorate([
             ng_bootstrap_1.NgbModule.forRoot(),
             core_2.AgmCoreModule.forRoot({
                 apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
-            })
+            }),
+            http_1.HttpModule
         ],
         declarations: [
             app_component_1.AppComponent,

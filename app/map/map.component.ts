@@ -13,6 +13,9 @@ import {CoordinateService} from './../services/coordinate.service';
 
 import {LatLngLiteral} from 'angular2-google-maps/core';
 
+import { Http, Response, Headers }          from '@angular/http';
+import 'rxjs/add/operator/toPromise';
+
 @Component({
     moduleId: module.id,
     selector: 'map',
@@ -39,8 +42,6 @@ export class MapComponent implements OnInit {
     pathColor: string;
     polygonPath: Array<LatLngLiteral>;
     polygonPath2: Array<LatLngLiteral>;
-    pathAux: Coordinate[];
-    markers: Coordinate[];
     pathAuxColor: string;
 
     sidebarConfig: {
@@ -76,21 +77,44 @@ export class MapComponent implements OnInit {
         strokeWeight: 0
     };
 
-    constructor(private coordinateService: CoordinateService) {
+    constructor(private coordinateService: CoordinateService, private http: Http) {
     }
 
     ngOnInit(): void {
-        this.pathAux = [];
-        this.markers = [];
         this.polygonPath = [];
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getPath(3);
+        let headers = new Headers();
+        headers.append('Authorization', 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI0YmYyYWMzMC1mZjcxLTExZTYtYjViOC0zZDkwNGM3M2EzNTgiLCJpc3MiOiJodHRwOlwvXC9sb2NhbGhvc3Q6ODAwMFwvdjFcL2xvZ2luIiwiaWF0IjoxNDg4NTQ2NjAwLCJleHAiOjE0ODg1NTAyMDAsIm5iZiI6MTQ4ODU0NjYwMCwianRpIjoiNTQ1MzIyMzI2MGM1ZjA3N2EzYThiNjJlMDYyNjY4ZGQifQ.yyRyxwZu9V4nH89iPqFs71Ar3N2-GnD8FYRrLAbBArw');
+        this.http.get('http://localhost:8000/v1/operations/5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e/sweeps', {
+            headers: headers
+        })
+            .toPromise()
+            .then(this.test)
+            .catch(this.handleError);
     }
 
-    click(): void {
-        console.log(document.querySelector('.sebm-google-map-container-inner'));
+    private test(res: Response) {
+        let body = res.json();
+        console.log(body);
+        return body || { };
+    }
+
+    private handleError (error: Response | any) {
+        // In a real world app, we might use a remote logging infrastructure
+        let errMsg: string;
+        if (error instanceof Response) {
+            const body = error.json() || '';
+            const err = body.error || JSON.stringify(body);
+            errMsg = `${error.status} - ${error.statusText || ''} ${err}`;
+        } else {
+            errMsg = error.message ? error.message : error.toString();
+        }
+        console.log(error);
+
+        console.error(errMsg);
+        return Promise.reject(errMsg);
     }
 
     sidebarToggleState(): void {
@@ -122,23 +146,6 @@ export class MapComponent implements OnInit {
                 this.polygonPath2.push({lat: auxPath2[i].latitude, lng: auxPath2[i].longitude});
             }
         });
-    }
-
-    clearPathAux(): void {
-        this.pathAux.length = 0;
-    }
-
-    mapClicked($event: MouseEvent) {
-        this.pathAux.push(new Coordinate($event.x, $event.y));
-    }
-
-    PrintCurrentPathAux(): void {
-        var output = "[\n";
-        for (let coordinate of this.pathAux) {
-            output += coordinate.toStringProg() + "\n";
-        }
-        output += "]\n";
-        console.log(output);
     }
 
     getRawPolygonPath(path: Coordinate[], dogSmeelDistanceInKm: number): Coordinate[] {

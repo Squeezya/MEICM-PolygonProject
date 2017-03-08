@@ -8,7 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
-var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var core_2 = require("angular2-google-maps/core");
 var ng2_pagination_1 = require("ng2-pagination");
 var angular2_busy_1 = require("angular2-busy");
@@ -22,6 +21,7 @@ var notfound_component_1 = require("./notfound/notfound.component");
 var app_service_1 = require("./config/app.service");
 var coordinate_service_1 = require("./services/coordinate.service");
 var operation_service_1 = require("./services/operation.service");
+var ng2_bootstrap_1 = require("ng2-bootstrap");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -33,7 +33,6 @@ AppModule = __decorate([
             platform_browser_1.BrowserModule,
             forms_1.FormsModule,
             app_routing_module_1.AppRoutingModule,
-            ng_bootstrap_1.NgbModule.forRoot(),
             core_2.AgmCoreModule.forRoot({
                 apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
             }),
@@ -44,8 +43,10 @@ AppModule = __decorate([
                 message: 'Loading...',
                 backdrop: true,
                 template: "\n                        <div class=\"flex-container\">\n                            <div class=\"flex-item\">\n                                <i class=\"fa fa-spinner fa-spin\"></i>\n                                {{message}}\n                            </div>\n                        </div>\n                ",
-                delay: 100
-            }))
+                delay: 200
+            })),
+            ng2_bootstrap_1.AlertModule.forRoot(),
+            ng2_bootstrap_1.ModalModule.forRoot()
         ],
         declarations: [
             app_component_1.AppComponent,

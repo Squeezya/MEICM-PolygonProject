@@ -13,6 +13,7 @@ var operation_service_1 = require("../services/operation.service");
 var RestObject_1 = require("../models/RestObject");
 var http_1 = require("@angular/http");
 var app_service_1 = require("../config/app.service");
+var ng2_bootstrap_1 = require("ng2-bootstrap");
 var OperationsComponent = (function () {
     function OperationsComponent(operationService) {
         this.operationService = operationService;
@@ -20,6 +21,12 @@ var OperationsComponent = (function () {
         this.currentPage = 1;
         this.perPage = 10;
     }
+    OperationsComponent.prototype.showChildModal = function () {
+        this.childModal.show();
+    };
+    OperationsComponent.prototype.hideChildModal = function () {
+        this.childModal.hide();
+    };
     OperationsComponent.prototype.ngOnInit = function () {
         this.currentPage = 1;
         this.restOperations = new RestObject_1.RestObject();
@@ -42,6 +49,10 @@ var OperationsComponent = (function () {
     };
     return OperationsComponent;
 }());
+__decorate([
+    core_1.ViewChild('childModal'),
+    __metadata("design:type", ng2_bootstrap_1.ModalDirective)
+], OperationsComponent.prototype, "childModal", void 0);
 OperationsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,

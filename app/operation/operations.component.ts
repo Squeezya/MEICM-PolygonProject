@@ -1,10 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {OperationService} from "../services/operation.service";
 import {Operation} from "../models/operation";
 import {RestObject} from "../models/RestObject";
 import {URLSearchParams} from "@angular/http";
 import {AppSettings} from "../config/app.service";
 import {Subscription} from "rxjs";
+import {ModalDirective} from "ng2-bootstrap";
+
 
 @Component({
     moduleId: module.id,
@@ -14,6 +16,16 @@ import {Subscription} from "rxjs";
 })
 
 export class OperationsComponent implements OnInit {
+
+    @ViewChild('childModal') public childModal:ModalDirective;
+
+    public showChildModal():void {
+        this.childModal.show();
+    }
+
+    public hideChildModal():void {
+        this.childModal.hide();
+    }
 
     public restOperations: RestObject<Operation>;
 

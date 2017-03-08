@@ -2,7 +2,6 @@ import {NgModule} from '@angular/core';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AgmCoreModule} from 'angular2-google-maps/core';
 
 import {Ng2PaginationModule} from 'ng2-pagination';
@@ -19,12 +18,13 @@ import {AppSettings} from './config/app.service';
 import {CoordinateService} from './services/coordinate.service';
 import {OperationService} from "./services/operation.service";
 
+import {ModalModule, AlertModule} from 'ng2-bootstrap';
+
 @NgModule({
     imports: [
         BrowserModule,
         FormsModule,
         AppRoutingModule,
-        NgbModule.forRoot(),
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
         }),
@@ -43,9 +43,11 @@ import {OperationService} from "./services/operation.service";
                             </div>
                         </div>
                 `,
-                delay: 100
+                delay: 200
             })
-        )
+        ),
+        AlertModule.forRoot(),
+        ModalModule.forRoot()
     ],
     declarations: [
         AppComponent,

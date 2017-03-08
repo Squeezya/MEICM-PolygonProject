@@ -40,6 +40,12 @@ AppModule = __decorate([
             http_1.HttpModule,
             ng2_pagination_1.Ng2PaginationModule,
             angular2_busy_1.BusyModule,
+            angular2_busy_1.BusyModule.forRoot(new angular2_busy_1.BusyConfig({
+                message: 'Loading...',
+                backdrop: true,
+                template: "\n                        <div class=\"flex-container\">\n                            <div class=\"flex-item\">\n                                <i class=\"fa fa-spinner fa-spin\"></i>\n                                {{message}}\n                            </div>\n                        </div>\n                ",
+                delay: 100
+            }))
         ],
         declarations: [
             app_component_1.AppComponent,

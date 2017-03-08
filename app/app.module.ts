@@ -6,9 +6,9 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AgmCoreModule} from 'angular2-google-maps/core';
 
 import {Ng2PaginationModule} from 'ng2-pagination';
-import {BusyModule} from 'angular2-busy';
+import {BusyModule, BusyConfig} from 'angular2-busy';
 
-import { HttpModule } from '@angular/http';
+import {HttpModule} from '@angular/http';
 import {AppRoutingModule} from './app-routing.module';
 import {AppComponent} from './app.component';
 import {DashboardComponent} from './dashboard/dashboard.component';
@@ -31,6 +31,21 @@ import {OperationService} from "./services/operation.service";
         HttpModule,
         Ng2PaginationModule,
         BusyModule,
+        BusyModule.forRoot(
+            new BusyConfig({
+                message: 'Loading...',
+                backdrop: true,
+                template: `
+                        <div class="flex-container">
+                            <div class="flex-item">
+                                <i class="fa fa-spinner fa-spin"></i>
+                                {{message}}
+                            </div>
+                        </div>
+                `,
+                delay: 100
+            })
+        )
     ],
     declarations: [
         AppComponent,

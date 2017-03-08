@@ -28,7 +28,11 @@
             'rxjs': 'npm:rxjs',
             'angular-in-memory-web-api': 'npm:angular-in-memory-web-api/bundles/in-memory-web-api.umd.js',
             '@ng-bootstrap/ng-bootstrap': 'node_modules/@ng-bootstrap/ng-bootstrap/bundles/ng-bootstrap.js',
-            'angular2-google-maps/core': 'npm:angular2-google-maps/core/core.umd.js'
+            'angular2-google-maps/core': 'npm:angular2-google-maps/core/core.umd.js',
+            'angular2-busy': 'node_modules/angular2-busy/build/src',
+            'angular2-dynamic-component': 'node_modules/angular2-dynamic-component',
+            'ts-metadata-helper': 'node_modules/ts-metadata-helper',
+            'core-js': 'node_modules/core-js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {
@@ -38,7 +42,11 @@
             },
             rxjs: {
                 defaultExtension: 'js'
-            }
+            },
+            'angular2-busy': {main: 'index.js', defaultExtension: 'js'},
+            'angular2-dynamic-component': {main: 'index.js', defaultExtension: 'js'},
+            'ts-metadata-helper': {main: 'index.js', defaultExtension: 'js'},
+            'core-js': {main: 'index.js', defaultExtension: 'js'}
         }
     });
 })(this);

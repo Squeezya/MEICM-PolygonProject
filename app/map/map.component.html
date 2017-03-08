@@ -5,12 +5,21 @@
             <div id="map-sidebar">
                 <div class="container-fluid">
                     <div class="row">
-                        <div class="col-sm-12">
-                            <!--sidebar content-->
-                        </div>
-                    </div>
-                </div>
-            </div>
+                        <div class="col-sm-12 mt-3">
+                            <div class="form-group">
+                                <label class="form-control-label" for="operationSelect">Select an Operation:</label>
+                                <select id="operationSelect"
+                                        class="form-control form-control-sm custom-select"
+                                        (change)="operationChanged(selectedOperation)"
+                                        [(ngModel)]="selectedOperation">
+                                    <option *ngIf="selectedOperation == null" selected="selected" [ngValue]="null">- Select an Operation -</option>
+                                    <option *ngFor="let operation of operations" [ngValue]="operation">{{operation.name}}</option>
+                                </select>
+                            </div> <!-- SELECT OPERATION -->
+                        </div> <!--sidebar content-->
+                    </div> <!--sidebar row-->
+                </div> <!--sidebar container fluid-->
+            </div> <!--sidebar -->
             <div id="map-sidebar-label" (click)="sidebarToggleState()">
                 <i class="icon fa"
                    [ngClass]="{'fa-caret-right': !isSidebarVisible(), 'fa-caret-left': isSidebarVisible()}"

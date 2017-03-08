@@ -8,15 +8,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var dashboard_component_1 = require("./dashboard/dashboard.component");
-var heroes_component_1 = require("./heroes/heroes.component");
-var hero_detail_component_1 = require("./hero-detail/hero-detail.component");
 var map_component_1 = require("./map/map.component");
 var notfound_component_1 = require("./notfound/notfound.component");
+var operations_component_1 = require("./operation/operations.component");
 var routes = [
     { path: '', redirectTo: '/dashboard', pathMatch: 'full' },
     { path: 'dashboard', component: dashboard_component_1.DashboardComponent },
-    { path: 'detail/:id', component: hero_detail_component_1.HeroDetailComponent },
-    { path: 'heroes', component: heroes_component_1.HeroesComponent },
+    { path: 'operations', component: operations_component_1.OperationsComponent },
     { path: 'map', component: map_component_1.MapComponent },
     // all other routes and finally at the last add
     { path: '**', component: notfound_component_1.NotFoundComponent }

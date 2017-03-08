@@ -1,18 +1,20 @@
 import {
     Component,
     OnInit,
-    Input,
     trigger,
     state,
     style,
     transition,
     animate
 } from '@angular/core';
-import {Coordinate} from './../models/coordinate';
-import {CoordinateService} from './../services/coordinate.service';
 
 import {LatLngLiteral} from 'angular2-google-maps/core';
+
+import {Operation} from "../models/operation";
 import {Sweep} from "../models/sweep";
+import {Coordinate} from './../models/coordinate';
+import {CoordinateService} from './../services/coordinate.service';
+import {OperationService} from "../services/operation.service";
 
 @Component({
     moduleId: module.id,
@@ -77,8 +79,12 @@ export class MapComponent implements OnInit {
 
     errorMessage: string;
     sweeps: Sweep[];
+    operations: Operation[];
+    selectedOperation: Operation = null;
 
-    constructor(private coordinateService: CoordinateService) {
+    constructor(private coordinateService: CoordinateService,
+                private operationService: OperationService
+    ) {
     }
 
     ngOnInit(): void {
@@ -86,23 +92,28 @@ export class MapComponent implements OnInit {
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getSweepsForOperation("5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e");
-
+        this.getAllOperations();
     }
 
-    getSweepsForOperation(operationId: string) {
+    private getAllOperations() {
+        this.operationService.getAll().subscribe(
+        res => this.operations = res.items,
+        error => this.errorMessage = <any>error);
+    }
+
+    private getSweepsForOperation(operationId: string) {
         this.coordinateService.getSweepsForOperation(operationId)
             .subscribe(
                 sweeps => this.process(sweeps),
                 error => this.errorMessage = <any>error);
     }
 
-    process(sweeps: Sweep[]) {
+    private process(sweeps: Sweep[]) {
         this.sweeps = sweeps;
         this.parseSweepsToPolygons(this.sweeps[0]);
     }
 
-    sidebarToggleState(): void {
+    public sidebarToggleState(): void {
         if (this.isSidebarVisible()) {
             this.sidebarConfig.state = 'inactive';
         } else {
@@ -110,11 +121,15 @@ export class MapComponent implements OnInit {
         }
     }
 
-    isSidebarVisible(): boolean {
+    public isSidebarVisible(): boolean {
         return this.sidebarConfig.state === "active";
     }
 
-    parseSweepsToPolygons(sweep: Sweep): void {
+    public operationChanged(operation: Operation): void {
+        this.process(operation.sweeps);
+    }
+
+    private parseSweepsToPolygons(sweep: Sweep): void {
         this.path = sweep.path;
         //center map on the beginning of the path
         this.mapConfig.lat = this.path[0].latitude;
@@ -131,7 +146,7 @@ export class MapComponent implements OnInit {
         }
     }
 
-    getRawPolygonPath(path: Coordinate[], dogSmeelDistanceInKm: number): Coordinate[] {
+    private getRawPolygonPath(path: Coordinate[], dogSmeelDistanceInKm: number): Coordinate[] {
         // for path.length - 1 because on each iteration we will fetch the next one.
         // Without -1 it would give an array out of bounds error
         var pathSide1: Coordinate[] = [];
@@ -157,7 +172,7 @@ export class MapComponent implements OnInit {
         return polygonPath;
     }
 
-    insidePolygon(latitude: number, longitude: number, vs: Coordinate[]): boolean {
+    private insidePolygon(latitude: number, longitude: number, vs: Coordinate[]): boolean {
         // ray-casting algorithm based on
         // http://www.ecse.rpi.edu/Homepages/wrf/Research/Short_Notes/pnpoly.html
 

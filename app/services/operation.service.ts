@@ -1,0 +1,45 @@
+import {Injectable} from '@angular/core';
+import {Headers, RequestOptions, Http, URLSearchParams} from '@angular/http';
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/exhaustMap';
+
+import {AppSettings} from '../config/app.service';
+
+import {Operation} from '../models/operation';
+import {RestService} from "./rest.service";
+import {RestObject} from "../models/RestObject";
+
+@Injectable()
+export class OperationService extends RestService {
+
+    constructor(http: Http) {
+        super(http);
+    }
+
+    public getAll(): Observable<RestObject<Operation>> {
+        let requestOptions = new RequestOptions();
+        let headers = new Headers();
+        headers.append('Authorization', AppSettings.TOKEN);
+        requestOptions.headers = headers;
+
+        return this.http.get(AppSettings.API_ENDPOINT + AppSettings.API_VERSION +
+            'operations', requestOptions
+        ).map(res => this.extractDataArray<Operation>(res, Operation.fromObject))
+            .catch(this.handleError);
+    }
+
+    public getWithSearch(search: URLSearchParams): Observable<RestObject<Operation>> {
+        let requestOptions = new RequestOptions();
+        let headers = new Headers();
+        headers.append('Authorization', AppSettings.TOKEN);
+        requestOptions.headers = headers;
+        requestOptions.search = search;
+
+        return this.http.get(AppSettings.API_ENDPOINT + AppSettings.API_VERSION +
+            'operations', requestOptions
+        ).map(res => this.extractDataArray<Operation>(res, Operation.fromObject))
+            .catch(this.handleError);
+    }
+}

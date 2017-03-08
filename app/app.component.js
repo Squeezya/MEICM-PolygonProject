@@ -16,8 +16,8 @@ var AppComponent = (function () {
                 activeClass: "active"
             },
             {
-                title: "Heroes",
-                url: "/heroes",
+                title: "Operations",
+                url: "/operations",
                 activeClass: "active"
             },
             {

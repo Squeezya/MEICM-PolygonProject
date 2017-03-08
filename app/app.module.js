@@ -10,17 +10,18 @@ var platform_browser_1 = require("@angular/platform-browser");
 var forms_1 = require("@angular/forms");
 var ng_bootstrap_1 = require("@ng-bootstrap/ng-bootstrap");
 var core_2 = require("angular2-google-maps/core");
-var app_component_1 = require("./app.component");
-var hero_detail_component_1 = require("./hero-detail/hero-detail.component");
-var heroes_component_1 = require("./heroes/heroes.component");
-var dashboard_component_1 = require("./dashboard/dashboard.component");
-var app_service_1 = require("./config/app.service");
-var hero_service_1 = require("./services/hero.service");
-var coordinate_service_1 = require("./services/coordinate.service");
+var ng2_pagination_1 = require("ng2-pagination");
+var angular2_busy_1 = require("angular2-busy");
+var http_1 = require("@angular/http");
 var app_routing_module_1 = require("./app-routing.module");
+var app_component_1 = require("./app.component");
+var dashboard_component_1 = require("./dashboard/dashboard.component");
+var operations_component_1 = require("./operation/operations.component");
 var map_component_1 = require("./map/map.component");
 var notfound_component_1 = require("./notfound/notfound.component");
-var http_1 = require("@angular/http");
+var app_service_1 = require("./config/app.service");
+var coordinate_service_1 = require("./services/coordinate.service");
+var operation_service_1 = require("./services/operation.service");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -36,20 +37,21 @@ AppModule = __decorate([
             core_2.AgmCoreModule.forRoot({
                 apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
             }),
-            http_1.HttpModule
+            http_1.HttpModule,
+            ng2_pagination_1.Ng2PaginationModule,
+            angular2_busy_1.BusyModule,
         ],
         declarations: [
             app_component_1.AppComponent,
-            hero_detail_component_1.HeroDetailComponent,
-            heroes_component_1.HeroesComponent,
             dashboard_component_1.DashboardComponent,
+            operations_component_1.OperationsComponent,
             map_component_1.MapComponent,
             notfound_component_1.NotFoundComponent
         ],
         providers: [
             app_service_1.AppSettings,
-            hero_service_1.HeroService,
-            coordinate_service_1.CoordinateService
+            coordinate_service_1.CoordinateService,
+            operation_service_1.OperationService
         ],
         bootstrap: [app_component_1.AppComponent],
     })

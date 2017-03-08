@@ -10,9 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require("@angular/core");
 var coordinate_service_1 = require("./../services/coordinate.service");
+var operation_service_1 = require("../services/operation.service");
 var MapComponent = (function () {
-    function MapComponent(coordinateService) {
+    function MapComponent(coordinateService, operationService) {
         this.coordinateService = coordinateService;
+        this.operationService = operationService;
         this.a = "s";
         this.sidebarConfig = {
             state: "active"
@@ -31,13 +33,18 @@ var MapComponent = (function () {
             fillColor: "#8ab5e3",
             strokeWeight: 0
         };
+        this.selectedOperation = null;
     }
     MapComponent.prototype.ngOnInit = function () {
         this.polygonPath = [];
         this.polygonPath2 = [];
         this.pathAuxColor = "#FF0000";
         this.pathColor = "#FF0000";
-        this.getSweepsForOperation("5be78aa0-ff71-11e6-a9e2-d9b4f1a3d99e");
+        this.getAllOperations();
+    };
+    MapComponent.prototype.getAllOperations = function () {
+        var _this = this;
+        this.operationService.getAll().subscribe(function (res) { return _this.operations = res.items; }, function (error) { return _this.errorMessage = error; });
     };
     MapComponent.prototype.getSweepsForOperation = function (operationId) {
         var _this = this;
@@ -58,6 +65,9 @@ var MapComponent = (function () {
     };
     MapComponent.prototype.isSidebarVisible = function () {
         return this.sidebarConfig.state === "active";
+    };
+    MapComponent.prototype.operationChanged = function (operation) {
+        this.process(operation.sweeps);
     };
     MapComponent.prototype.parseSweepsToPolygons = function (sweep) {
         this.path = sweep.path;
@@ -136,7 +146,8 @@ MapComponent = __decorate([
             ])
         ]
     }),
-    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService])
+    __metadata("design:paramtypes", [coordinate_service_1.CoordinateService,
+        operation_service_1.OperationService])
 ], MapComponent);
 exports.MapComponent = MapComponent;
 //# sourceMappingURL=map.component.js.map

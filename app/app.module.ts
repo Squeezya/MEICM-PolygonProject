@@ -5,17 +5,19 @@ import {FormsModule} from '@angular/forms';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {AgmCoreModule} from 'angular2-google-maps/core';
 
-import {AppComponent} from './app.component';
-import {HeroDetailComponent} from './hero-detail/hero-detail.component';
-import {HeroesComponent} from './heroes/heroes.component';
-import {DashboardComponent} from './dashboard/dashboard.component';
-import {AppSettings} from './config/app.service';
-import {HeroService} from './services/hero.service';
-import {CoordinateService} from './services/coordinate.service';
+import {Ng2PaginationModule} from 'ng2-pagination';
+import {BusyModule} from 'angular2-busy';
+
+import { HttpModule } from '@angular/http';
 import {AppRoutingModule} from './app-routing.module';
+import {AppComponent} from './app.component';
+import {DashboardComponent} from './dashboard/dashboard.component';
+import {OperationsComponent} from './operation/operations.component';
 import {MapComponent} from './map/map.component';
 import {NotFoundComponent} from './notfound/notfound.component';
-import { HttpModule } from '@angular/http';
+import {AppSettings} from './config/app.service';
+import {CoordinateService} from './services/coordinate.service';
+import {OperationService} from "./services/operation.service";
 
 @NgModule({
     imports: [
@@ -26,20 +28,21 @@ import { HttpModule } from '@angular/http';
         AgmCoreModule.forRoot({
             apiKey: 'AIzaSyDUcvsCFszfqJbGY5TRPPzb-vhy8yUmpwE'
         }),
-        HttpModule
+        HttpModule,
+        Ng2PaginationModule,
+        BusyModule,
     ],
     declarations: [
         AppComponent,
-        HeroDetailComponent,
-        HeroesComponent,
         DashboardComponent,
+        OperationsComponent,
         MapComponent,
         NotFoundComponent
     ],
     providers: [
         AppSettings,
-        HeroService,
-        CoordinateService
+        CoordinateService,
+        OperationService
     ],
     bootstrap: [AppComponent],
 })

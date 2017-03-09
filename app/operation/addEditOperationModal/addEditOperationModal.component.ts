@@ -19,6 +19,7 @@ export class AddOperationModalComponent implements OnInit {
     isEditing: boolean;
     title: string;
     saveButtonTitle: string;
+    operation: Operation;
 
     constructor(private operationService: OperationService) {
     }
@@ -31,12 +32,14 @@ export class AddOperationModalComponent implements OnInit {
         this.modalConfig = {
             backdrop: 'static'
         };
+        this.operation = new Operation();
     }
 
-    public showChildModal(operation: Operation): void {
+    public showModal(operation: Operation): void {
         this.isEditing = operation != null;
         this.title = this.isEditing ? 'Edit Operation' : 'Add Operation';
         this.saveButtonTitle = this.isEditing ? 'Save' : 'Add';
+        this.operation = Object.assign({}, operation);
         this.modal.show();
     }
 
@@ -50,7 +53,7 @@ export class AddOperationModalComponent implements OnInit {
     }
 
     public saveAndClose(): void {
-        this.onModalSuccess.emit();
+        this.onModalSuccess.emit(this.operation);
     }
 
 }

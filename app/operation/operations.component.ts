@@ -19,26 +19,9 @@ import {ToasterService} from 'angular2-toaster';
 export class OperationsComponent implements OnInit {
 
     @ViewChild('addEditOperationModal') public addEditOperationModal: AddOperationModalComponent;
-
     public isModalLoading: Subscription;
 
-    public success() {
-        this.isModalLoading = this.operationService.create(this.restOperations.items[0]).subscribe(
-            res => {
-                this.getAllOperations(this.currentPage, this.perPage);
-                this.toasterService.pop('success', 'Add Success', 'Operation "' + res.name + '" added successfully.');
-                this.addEditOperationModal.hideModal();
-            },
-            error => {
-            });
-    }
-
-    public cancel() {
-        console.log('cancel');
-    }
-
     public restOperations: RestObject<Operation>;
-
     public perPageOptions: number[];
     public currentPage: number;
     public perPage: number;
@@ -59,6 +42,26 @@ export class OperationsComponent implements OnInit {
         this.getAllOperations(this.currentPage, this.perPage);
     }
 
+    public operationsChanged(page: number, perPage: number) {
+        this.currentPage = page;
+        this.perPage = perPage;
+        this.getAllOperations(this.currentPage, this.perPage);
+    }
+
+    public successAddEditOperationModal(operation: Operation) {
+        if(operation.id != null) {
+            //update
+            this.updateOperation(operation);
+        } else {
+            //create
+            this.createOperation(operation);
+        }
+    }
+
+    public cancelAddEditOperationModal() {
+        console.log('cancelAddEditOperationModal');
+    }
+
     private getAllOperations(page: number, perPage: number) {
         let search = new URLSearchParams();
         search.append('perPage', perPage.toString());
@@ -71,10 +74,26 @@ export class OperationsComponent implements OnInit {
             error => this.errorMessage = <any>error);
     }
 
-    public operationsChanged(page: number, perPage: number) {
-        this.currentPage = page;
-        this.perPage = perPage;
-        this.getAllOperations(this.currentPage, this.perPage);
+    private createOperation(operation: Operation): void {
+        this.isModalLoading = this.operationService.create(operation).subscribe(
+            res => {
+                this.getAllOperations(this.currentPage, this.perPage);
+                this.toasterService.pop('success', 'Add Success', 'Operation "' + res.name + '" added successfully.');
+                this.addEditOperationModal.hideModal();
+            },
+            error => {
+            });
+    }
+
+    private updateOperation(operation: Operation): void {
+        this.isModalLoading = this.operationService.update(operation).subscribe(
+            res => {
+                this.getAllOperations(this.currentPage, this.perPage);
+                this.toasterService.pop('success', 'Edit Success', 'Operation "' + res.name + '" edited successfully.');
+                this.addEditOperationModal.hideModal();
+            },
+            error => {
+            });
     }
 }
 

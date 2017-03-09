@@ -8,12 +8,7 @@ export class Operation {
     created_at: Date;
     updated_at: Date;
 
-    constructor(id: string, name: string, sweeps: Sweep[], created_at: Date, updated_at: Date) {
-        this.id = id;
-        this.name = name;
-        this.sweeps = sweeps;
-        this.created_at = created_at;
-        this.updated_at = updated_at;
+    constructor() {
     }
 
     public static fromObject(json: any): Operation {
@@ -23,6 +18,12 @@ export class Operation {
                 sweeps.push(Sweep.fromObject(json.sweeps[i]));
             }
         }
-        return new Operation(json.id, json.name, sweeps, new Date(json.created_at), new Date(json.updated_at));
+        let operation = new Operation();
+        operation.id = json.id;
+        operation.name = json.name;
+        operation.sweeps = sweeps;
+        operation.created_at = new Date(json.created_at);
+        operation.updated_at = new Date(json.updated_at);
+        return operation;
     }
 }

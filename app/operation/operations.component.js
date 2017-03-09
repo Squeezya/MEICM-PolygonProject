@@ -20,24 +20,30 @@ var OperationsComponent = (function () {
         this.operationService = operationService;
         this.toasterService = toasterService;
     }
-    OperationsComponent.prototype.success = function () {
-        var _this = this;
-        this.isModalLoading = this.operationService.create(this.restOperations.items[0]).subscribe(function (res) {
-            _this.getAllOperations(_this.currentPage, _this.perPage);
-            _this.toasterService.pop('success', 'Add Success', 'Operation "' + res.name + '" added successfully.');
-            _this.addEditOperationModal.hideModal();
-        }, function (error) {
-        });
-    };
-    OperationsComponent.prototype.cancel = function () {
-        console.log('cancel');
-    };
     OperationsComponent.prototype.ngOnInit = function () {
         this.perPageOptions = app_service_1.AppSettings.PAGINATION.PER_PAGE_OPTIONS;
         this.currentPage = 1;
         this.perPage = 10;
         this.restOperations = new RestObject_1.RestObject();
         this.getAllOperations(this.currentPage, this.perPage);
+    };
+    OperationsComponent.prototype.operationsChanged = function (page, perPage) {
+        this.currentPage = page;
+        this.perPage = perPage;
+        this.getAllOperations(this.currentPage, this.perPage);
+    };
+    OperationsComponent.prototype.successAddEditOperationModal = function (operation) {
+        if (operation.id != null) {
+            //update
+            this.updateOperation(operation);
+        }
+        else {
+            //create
+            this.createOperation(operation);
+        }
+    };
+    OperationsComponent.prototype.cancelAddEditOperationModal = function () {
+        console.log('cancelAddEditOperationModal');
     };
     OperationsComponent.prototype.getAllOperations = function (page, perPage) {
         var _this = this;
@@ -49,10 +55,23 @@ var OperationsComponent = (function () {
         }
         this.operationsSubscription = this.operationService.getWithSearch(search).subscribe(function (res) { return _this.restOperations = res; }, function (error) { return _this.errorMessage = error; });
     };
-    OperationsComponent.prototype.operationsChanged = function (page, perPage) {
-        this.currentPage = page;
-        this.perPage = perPage;
-        this.getAllOperations(this.currentPage, this.perPage);
+    OperationsComponent.prototype.createOperation = function (operation) {
+        var _this = this;
+        this.isModalLoading = this.operationService.create(operation).subscribe(function (res) {
+            _this.getAllOperations(_this.currentPage, _this.perPage);
+            _this.toasterService.pop('success', 'Add Success', 'Operation "' + res.name + '" added successfully.');
+            _this.addEditOperationModal.hideModal();
+        }, function (error) {
+        });
+    };
+    OperationsComponent.prototype.updateOperation = function (operation) {
+        var _this = this;
+        this.isModalLoading = this.operationService.update(operation).subscribe(function (res) {
+            _this.getAllOperations(_this.currentPage, _this.perPage);
+            _this.toasterService.pop('success', 'Edit Success', 'Operation "' + res.name + '" edited successfully.');
+            _this.addEditOperationModal.hideModal();
+        }, function (error) {
+        });
     };
     return OperationsComponent;
 }());

@@ -3,7 +3,7 @@
     <h2 class="mb-3">Operations</h2>
     <div class="float-right mb-2">
         <button type="button" class="btn btn-success"
-                (click)="addEditOperationModal.showChildModal(null)">
+                (click)="addEditOperationModal.showModal(null)">
             <i class="fa fa-plus"></i>&nbsp;Add Operation
         </button>
     </div>
@@ -29,7 +29,8 @@
                 <td>
                     <div class="btn-group" role="group" aria-label="Actions">
                         <button type="button" class="btn btn-info"><i class="fa fa-eye"></i></button>
-                        <button type="button" class="btn btn-warning"><i class="fa fa-pencil"></i></button>
+                        <button type="button" class="btn btn-warning"
+                                (click)="addEditOperationModal.showModal(operation)"><i class="fa fa-pencil"></i></button>
                         <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
                     </div>
                 </td>
@@ -55,7 +56,7 @@
         </pagination-controls>
     </div> <!-- pagination -->
     <add-edit-operation-modal #addEditOperationModal
-                              (onModalSuccess)="success()"
+                              (onModalSuccess)="successAddEditOperationModal($event)"
                               [isLoading]="isModalLoading"
-                              (onModalCanceled)="cancel()"></add-edit-operation-modal>
+                              (onModalCanceled)="cancelAddEditOperationModal()"></add-edit-operation-modal>
 </div>

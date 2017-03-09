@@ -54,4 +54,16 @@ export class OperationService extends RestService {
         ).map(res => this.extractData(res, Operation.fromObject))
             .catch(this.handleError);
     }
+
+    public update(operation: Operation): Observable<Operation> {
+        let requestOptions = new RequestOptions();
+        let headers = new Headers();
+        headers.append('Authorization', AppSettings.TOKEN);
+        requestOptions.headers = headers;
+
+        return this.http.put(AppSettings.API_ENDPOINT + AppSettings.API_VERSION +
+            'operations/' + operation.id, operation, requestOptions
+        ).map(res => this.extractData(res, Operation.fromObject))
+            .catch(this.handleError);
+    }
 }

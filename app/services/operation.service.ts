@@ -42,4 +42,16 @@ export class OperationService extends RestService {
         ).map(res => this.extractDataArray<Operation>(res, Operation.fromObject))
             .catch(this.handleError);
     }
+
+    public create(operation: Operation): Observable<Operation> {
+        let requestOptions = new RequestOptions();
+        let headers = new Headers();
+        headers.append('Authorization', AppSettings.TOKEN);
+        requestOptions.headers = headers;
+
+        return this.http.post(AppSettings.API_ENDPOINT + AppSettings.API_VERSION +
+            'operations', operation, requestOptions
+        ).map(res => this.extractData(res, Operation.fromObject))
+            .catch(this.handleError);
+    }
 }

@@ -16,9 +16,11 @@ import {MapComponent} from './map/map.component';
 import {NotFoundComponent} from './notfound/notfound.component';
 import {AppSettings} from './config/app.service';
 import {CoordinateService} from './services/coordinate.service';
-import {OperationService} from "./services/operation.service";
+import {OperationService} from './services/operation.service';
 
 import {ModalModule, AlertModule} from 'ng2-bootstrap';
+import {AddOperationModalComponent} from "./operation/addEditOperationModal/addEditOperationModal.component";
+import {ToasterModule, ToasterService} from "angular2-toaster";
 
 @NgModule({
     imports: [
@@ -47,19 +49,22 @@ import {ModalModule, AlertModule} from 'ng2-bootstrap';
             })
         ),
         AlertModule.forRoot(),
-        ModalModule.forRoot()
+        ModalModule.forRoot(),
+        ToasterModule
     ],
     declarations: [
         AppComponent,
         DashboardComponent,
         OperationsComponent,
         MapComponent,
-        NotFoundComponent
+        NotFoundComponent,
+        AddOperationModalComponent
     ],
     providers: [
         AppSettings,
         CoordinateService,
-        OperationService
+        OperationService,
+        ToasterService
     ],
     bootstrap: [AppComponent],
 })

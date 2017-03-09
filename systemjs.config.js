@@ -34,7 +34,8 @@
             'ts-metadata-helper': 'npm:ts-metadata-helper',
             'core-js': 'npm:core-js',
             'moment': 'npm:moment',
-            'ng2-bootstrap': 'npm:ng2-bootstrap'
+            'ng2-bootstrap': 'npm:ng2-bootstrap',
+            'angular2-toaster': 'npm:angular2-toaster/bundles/angular2-toaster.umd.js'
         },
         // packages tells the System loader how to load when no filename and/or no extension
         packages: {

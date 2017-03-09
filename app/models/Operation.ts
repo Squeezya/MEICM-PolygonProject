@@ -18,8 +18,10 @@ export class Operation {
 
     public static fromObject(json: any): Operation {
         let sweeps: Sweep[] = [];
-        for( let i = 0; i < json.sweeps.length; i++) {
-            sweeps.push(Sweep.fromObject(json.sweeps[i]));
+        if (json.sweeps) {
+            for (let i = 0; i < json.sweeps.length; i++) {
+                sweeps.push(Sweep.fromObject(json.sweeps[i]));
+            }
         }
         return new Operation(json.id, json.name, sweeps, new Date(json.created_at), new Date(json.updated_at));
     }

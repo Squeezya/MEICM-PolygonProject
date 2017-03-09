@@ -13,22 +13,29 @@ var operation_service_1 = require("../services/operation.service");
 var RestObject_1 = require("../models/RestObject");
 var http_1 = require("@angular/http");
 var app_service_1 = require("../config/app.service");
-var ng2_bootstrap_1 = require("ng2-bootstrap");
+var addEditOperationModal_component_1 = require("./addEditOperationModal/addEditOperationModal.component");
+var angular2_toaster_1 = require("angular2-toaster");
 var OperationsComponent = (function () {
-    function OperationsComponent(operationService) {
+    function OperationsComponent(operationService, toasterService) {
         this.operationService = operationService;
+        this.toasterService = toasterService;
+    }
+    OperationsComponent.prototype.success = function () {
+        var _this = this;
+        this.isModalLoading = this.operationService.create(this.restOperations.items[0]).subscribe(function (res) {
+            _this.getAllOperations(_this.currentPage, _this.perPage);
+            _this.toasterService.pop('success', 'Add Success', 'Operation "' + res.name + '" added successfully.');
+            _this.addEditOperationModal.hideModal();
+        }, function (error) {
+        });
+    };
+    OperationsComponent.prototype.cancel = function () {
+        console.log('cancel');
+    };
+    OperationsComponent.prototype.ngOnInit = function () {
         this.perPageOptions = app_service_1.AppSettings.PAGINATION.PER_PAGE_OPTIONS;
         this.currentPage = 1;
         this.perPage = 10;
-    }
-    OperationsComponent.prototype.showChildModal = function () {
-        this.childModal.show();
-    };
-    OperationsComponent.prototype.hideChildModal = function () {
-        this.childModal.hide();
-    };
-    OperationsComponent.prototype.ngOnInit = function () {
-        this.currentPage = 1;
         this.restOperations = new RestObject_1.RestObject();
         this.getAllOperations(this.currentPage, this.perPage);
     };
@@ -50,9 +57,9 @@ var OperationsComponent = (function () {
     return OperationsComponent;
 }());
 __decorate([
-    core_1.ViewChild('childModal'),
-    __metadata("design:type", ng2_bootstrap_1.ModalDirective)
-], OperationsComponent.prototype, "childModal", void 0);
+    core_1.ViewChild('addEditOperationModal'),
+    __metadata("design:type", addEditOperationModal_component_1.AddOperationModalComponent)
+], OperationsComponent.prototype, "addEditOperationModal", void 0);
 OperationsComponent = __decorate([
     core_1.Component({
         moduleId: module.id,
@@ -60,7 +67,8 @@ OperationsComponent = __decorate([
         templateUrl: 'operations.component.html',
         styleUrls: ['operations.component.css']
     }),
-    __metadata("design:paramtypes", [operation_service_1.OperationService])
+    __metadata("design:paramtypes", [operation_service_1.OperationService,
+        angular2_toaster_1.ToasterService])
 ], OperationsComponent);
 exports.OperationsComponent = OperationsComponent;
 //# sourceMappingURL=operations.component.js.map

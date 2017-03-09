@@ -22,6 +22,8 @@ var app_service_1 = require("./config/app.service");
 var coordinate_service_1 = require("./services/coordinate.service");
 var operation_service_1 = require("./services/operation.service");
 var ng2_bootstrap_1 = require("ng2-bootstrap");
+var addEditOperationModal_component_1 = require("./operation/addEditOperationModal/addEditOperationModal.component");
+var angular2_toaster_1 = require("angular2-toaster");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -46,19 +48,22 @@ AppModule = __decorate([
                 delay: 200
             })),
             ng2_bootstrap_1.AlertModule.forRoot(),
-            ng2_bootstrap_1.ModalModule.forRoot()
+            ng2_bootstrap_1.ModalModule.forRoot(),
+            angular2_toaster_1.ToasterModule
         ],
         declarations: [
             app_component_1.AppComponent,
             dashboard_component_1.DashboardComponent,
             operations_component_1.OperationsComponent,
             map_component_1.MapComponent,
-            notfound_component_1.NotFoundComponent
+            notfound_component_1.NotFoundComponent,
+            addEditOperationModal_component_1.AddOperationModalComponent
         ],
         providers: [
             app_service_1.AppSettings,
             coordinate_service_1.CoordinateService,
-            operation_service_1.OperationService
+            operation_service_1.OperationService,
+            angular2_toaster_1.ToasterService
         ],
         bootstrap: [app_component_1.AppComponent],
     })

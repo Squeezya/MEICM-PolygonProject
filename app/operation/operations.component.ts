@@ -4,9 +4,10 @@ import {Operation} from "../models/operation";
 import {RestObject} from "../models/RestObject";
 import {URLSearchParams} from "@angular/http";
 import {AppSettings} from "../config/app.service";
-import {Subscription} from "rxjs";
-import {ModalDirective} from "ng2-bootstrap";
+import {Subscription, Observable} from "rxjs";
+import {AddOperationModalComponent} from "./addEditOperationModal/addEditOperationModal.component";
 
+import {ToasterService} from 'angular2-toaster';
 
 @Component({
     moduleId: module.id,
@@ -17,14 +18,23 @@ import {ModalDirective} from "ng2-bootstrap";
 
 export class OperationsComponent implements OnInit {
 
-    @ViewChild('childModal') public childModal:ModalDirective;
+    @ViewChild('addEditOperationModal') public addEditOperationModal: AddOperationModalComponent;
 
-    public showChildModal():void {
-        this.childModal.show();
+    public isModalLoading: Subscription;
+
+    public success() {
+        this.isModalLoading = this.operationService.create(this.restOperations.items[0]).subscribe(
+            res => {
+                this.getAllOperations(this.currentPage, this.perPage);
+                this.toasterService.pop('success', 'Add Success', 'Operation "' + res.name + '" added successfully.');
+                this.addEditOperationModal.hideModal();
+            },
+            error => {
+            });
     }
 
-    public hideChildModal():void {
-        this.childModal.hide();
+    public cancel() {
+        console.log('cancel');
     }
 
     public restOperations: RestObject<Operation>;
@@ -37,14 +47,14 @@ export class OperationsComponent implements OnInit {
 
     public errorMessage: string;
 
-    constructor(private operationService: OperationService) {
-        this.perPageOptions = AppSettings.PAGINATION.PER_PAGE_OPTIONS;
-        this.currentPage = 1;
-        this.perPage = 10;
+    constructor(private operationService: OperationService,
+                private toasterService: ToasterService) {
     }
 
     ngOnInit(): void {
+        this.perPageOptions = AppSettings.PAGINATION.PER_PAGE_OPTIONS;
         this.currentPage = 1;
+        this.perPage = 10;
         this.restOperations = new RestObject<Operation>();
         this.getAllOperations(this.currentPage, this.perPage);
     }
@@ -53,7 +63,7 @@ export class OperationsComponent implements OnInit {
         let search = new URLSearchParams();
         search.append('perPage', perPage.toString());
         search.append('page', page.toString());
-        if(this.operationsSubscription && !this.operationsSubscription.closed) {
+        if (this.operationsSubscription && !this.operationsSubscription.closed) {
             this.operationsSubscription.unsubscribe();
         }
         this.operationsSubscription = this.operationService.getWithSearch(search).subscribe(

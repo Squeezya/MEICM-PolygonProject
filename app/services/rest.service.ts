@@ -3,7 +3,6 @@ import {Http, Response} from '@angular/http';
 import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/exhaustMap';
 import {RestObject} from "../models/RestObject";
 
 @Injectable()
@@ -13,8 +12,8 @@ export class RestService {
     }
 
     protected extractData(res: Response, mapFunc: Function): any {
-        let body = res.json().map(mapFunc);
-        return body || {};
+        let body = res.json();
+        return mapFunc(body);
     }
 
     protected extractDataArray<T>(res: Response, mapFunc: Function): any {

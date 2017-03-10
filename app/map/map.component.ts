@@ -126,6 +126,7 @@ export class MapComponent implements OnInit {
     }
 
     public operationChanged(operation: Operation): void {
+        console.log(operation);
         this.process(operation.sweeps);
     }
 

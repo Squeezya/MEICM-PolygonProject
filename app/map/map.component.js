@@ -67,6 +67,7 @@ var MapComponent = (function () {
         return this.sidebarConfig.state === "active";
     };
     MapComponent.prototype.operationChanged = function (operation) {
+        console.log(operation);
         this.process(operation.sweeps);
     };
     MapComponent.prototype.parseSweepsToPolygons = function (sweep) {

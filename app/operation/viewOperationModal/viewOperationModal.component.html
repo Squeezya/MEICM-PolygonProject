@@ -1,0 +1,24 @@
+<div bsModal #viewOperationModal="bs-modal" class="modal fade" tabindex="-1" role="dialog"
+     aria-labelledby="mySmallModalLabel" aria-hidden="true"
+     [config]="modalConfig">
+    <div class="modal-dialog modal-lg" style="position: relative">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title float-left">View Operation</h4>
+                <button type="button" class="close float-right" aria-label="Close" (click)="hideModal()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-inline">
+                    <label for="name" class="mr-2 font-weight-bold">Name:</label>
+                    <p id="name" class="form-control-static" aria-describedby="nameHelp"
+                       [innerText]="operation.name"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="hideModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>

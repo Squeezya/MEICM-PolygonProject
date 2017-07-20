@@ -19,8 +19,10 @@ import {CoordinateService} from './services/coordinate.service';
 import {OperationService} from './services/operation.service';
 
 import {ModalModule, AlertModule} from 'ng2-bootstrap';
-import {AddOperationModalComponent} from "./operation/addEditOperationModal/addEditOperationModal.component";
+import {AddEditOperationModalComponent} from "./operation/addEditOperationModal/addEditOperationModal.component";
 import {ToasterModule, ToasterService} from "angular2-toaster";
+import {ViewOperationModalComponent} from "./operation/viewOperationModal/viewOperationModal.component";
+import {ConfirmModalComponent} from "./confirmModal/confirmModal.component";
 
 @NgModule({
     imports: [
@@ -58,7 +60,9 @@ import {ToasterModule, ToasterService} from "angular2-toaster";
         OperationsComponent,
         MapComponent,
         NotFoundComponent,
-        AddOperationModalComponent
+        AddEditOperationModalComponent,
+        ViewOperationModalComponent,
+        ConfirmModalComponent
     ],
     providers: [
         AppSettings,

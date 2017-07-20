@@ -4,10 +4,12 @@ import {Operation} from "../models/operation";
 import {RestObject} from "../models/RestObject";
 import {URLSearchParams} from "@angular/http";
 import {AppSettings} from "../config/app.service";
-import {Subscription, Observable} from "rxjs";
-import {AddOperationModalComponent} from "./addEditOperationModal/addEditOperationModal.component";
+import {Subscription} from "rxjs";
+import {AddEditOperationModalComponent} from "./addEditOperationModal/addEditOperationModal.component";
 
 import {ToasterService} from 'angular2-toaster';
+import {ViewOperationModalComponent} from "./viewOperationModal/viewOperationModal.component";
+import {ConfirmModalComponent} from "../confirmModal/confirmModal.component";
 
 @Component({
     moduleId: module.id,
@@ -18,7 +20,9 @@ import {ToasterService} from 'angular2-toaster';
 
 export class OperationsComponent implements OnInit {
 
-    @ViewChild('addEditOperationModal') public addEditOperationModal: AddOperationModalComponent;
+    @ViewChild('viewOperationModal') public viewOperationModal: ViewOperationModalComponent;
+    @ViewChild('confirmDeleteOperationModal') public confirmDeleteOperationModal: ConfirmModalComponent;
+    @ViewChild('addEditOperationModal') public addEditOperationModal: AddEditOperationModalComponent;
     public isModalLoading: Subscription;
 
     public restOperations: RestObject<Operation>;
@@ -58,8 +62,11 @@ export class OperationsComponent implements OnInit {
         }
     }
 
-    public cancelAddEditOperationModal() {
-        console.log('cancelAddEditOperationModal');
+    public showConfirmDeleteOperationModal(operation: Operation) {
+        this.confirmDeleteOperationModal.showModal('Delete Operation', 'Close', 'Confirm', operation);
+    }
+    public onConfirmDeleteOperation(operation: Operation) {
+        console.log(operation);
     }
 
     private getAllOperations(page: number, perPage: number) {

@@ -9,7 +9,7 @@ import {OperationService} from "../../services/operation.service";
     templateUrl: 'addEditOperationModal.component.html',
     styleUrls: ['addEditOperationModal.component.css']
 })
-export class AddOperationModalComponent implements OnInit {
+export class AddEditOperationModalComponent implements OnInit {
     @ViewChild('addEditOperationModal') public modal: ModalDirective;
 
     @Output() onModalSuccess = new EventEmitter();

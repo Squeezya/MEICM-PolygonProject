@@ -15,6 +15,8 @@ var http_1 = require("@angular/http");
 var app_service_1 = require("../config/app.service");
 var addEditOperationModal_component_1 = require("./addEditOperationModal/addEditOperationModal.component");
 var angular2_toaster_1 = require("angular2-toaster");
+var viewOperationModal_component_1 = require("./viewOperationModal/viewOperationModal.component");
+var confirmModal_component_1 = require("../confirmModal/confirmModal.component");
 var OperationsComponent = (function () {
     function OperationsComponent(operationService, toasterService) {
         this.operationService = operationService;
@@ -42,8 +44,11 @@ var OperationsComponent = (function () {
             this.createOperation(operation);
         }
     };
-    OperationsComponent.prototype.cancelAddEditOperationModal = function () {
-        console.log('cancelAddEditOperationModal');
+    OperationsComponent.prototype.showConfirmDeleteOperationModal = function (operation) {
+        this.confirmDeleteOperationModal.showModal('Delete Operation', 'Close', 'Confirm', operation);
+    };
+    OperationsComponent.prototype.onConfirmDeleteOperation = function (operation) {
+        console.log(operation);
     };
     OperationsComponent.prototype.getAllOperations = function (page, perPage) {
         var _this = this;
@@ -76,8 +81,16 @@ var OperationsComponent = (function () {
     return OperationsComponent;
 }());
 __decorate([
+    core_1.ViewChild('viewOperationModal'),
+    __metadata("design:type", viewOperationModal_component_1.ViewOperationModalComponent)
+], OperationsComponent.prototype, "viewOperationModal", void 0);
+__decorate([
+    core_1.ViewChild('confirmDeleteOperationModal'),
+    __metadata("design:type", confirmModal_component_1.ConfirmModalComponent)
+], OperationsComponent.prototype, "confirmDeleteOperationModal", void 0);
+__decorate([
     core_1.ViewChild('addEditOperationModal'),
-    __metadata("design:type", addEditOperationModal_component_1.AddOperationModalComponent)
+    __metadata("design:type", addEditOperationModal_component_1.AddEditOperationModalComponent)
 ], OperationsComponent.prototype, "addEditOperationModal", void 0);
 OperationsComponent = __decorate([
     core_1.Component({

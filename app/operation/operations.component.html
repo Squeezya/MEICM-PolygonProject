@@ -28,10 +28,12 @@
                 <td [innerText]="operation.created_at | date:'medium'"></td>
                 <td>
                     <div class="btn-group" role="group" aria-label="Actions">
-                        <button type="button" class="btn btn-info"><i class="fa fa-eye"></i></button>
+                        <button type="button" class="btn btn-info"
+                            (click)="viewOperationModal.showModal(operation)"><i class="fa fa-eye"></i></button>
                         <button type="button" class="btn btn-warning"
                                 (click)="addEditOperationModal.showModal(operation)"><i class="fa fa-pencil"></i></button>
-                        <button type="button" class="btn btn-danger"><i class="fa fa-trash"></i></button>
+                        <button type="button" class="btn btn-danger"
+                                (click)="showConfirmDeleteOperationModal(operation)"><i class="fa fa-trash"></i></button>
                     </div>
                 </td>
             </tr>
@@ -57,6 +59,15 @@
     </div> <!-- pagination -->
     <add-edit-operation-modal #addEditOperationModal
                               (onModalSuccess)="successAddEditOperationModal($event)"
-                              [isLoading]="isModalLoading"
-                              (onModalCanceled)="cancelAddEditOperationModal()"></add-edit-operation-modal>
+                              [isLoading]="isModalLoading">
+    </add-edit-operation-modal>
+
+    <view-operation-modal #viewOperationModal></view-operation-modal>
+
+    <confirm-modal #confirmDeleteOperationModal
+                   (onModalSuccess)="onConfirmDeleteOperation($event)">
+        <div class="confirm-modal-body">
+            Whatever content you like, form fields, anything
+        </div>
+    </confirm-modal>
 </div>

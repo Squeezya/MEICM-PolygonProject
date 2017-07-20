@@ -1,0 +1,20 @@
+<div bsModal #confirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true"
+     [config]="modalConfig">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title float-left" [innerText]="title"></h4>
+                <button type="button" class="close float-right" aria-label="Close" (click)="cancel()">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <ng-content select=".confirm-modal-body"></ng-content>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" (click)="cancel()" [innerText]="cancelButtonTitle"></button>
+                <button type="button" class="btn btn-primary" (click)="confirm()" [innerText]="confirmButtonTitle"></button>
+            </div>
+        </div>
+    </div>
+</div>

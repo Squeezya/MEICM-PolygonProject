@@ -3,8 +3,8 @@
     <div class="modal-dialog modal-lg" style="position: relative">
         <div class="modal-content" [ngBusy]="isLoading">
             <div class="modal-header">
-                <h4 class="modal-title pull-left" [innerText]="title"></h4>
-                <button type="button" class="close pull-right" aria-label="Close" (click)="cancel()">
+                <h4 class="modal-title float-left" [innerText]="title"></h4>
+                <button type="button" class="close float-right" aria-label="Close" (click)="cancel()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
@@ -13,7 +13,6 @@
                     <label for="name">Name</label>
                     <input type="text" class="form-control" id="name" aria-describedby="nameHelp" placeholder="Enter Operation Name"
                     [(ngModel)]="operation.name">
-                    <!--<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>-->
                 </div>
             </div>
             <div class="modal-footer">

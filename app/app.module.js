@@ -24,6 +24,8 @@ var operation_service_1 = require("./services/operation.service");
 var ng2_bootstrap_1 = require("ng2-bootstrap");
 var addEditOperationModal_component_1 = require("./operation/addEditOperationModal/addEditOperationModal.component");
 var angular2_toaster_1 = require("angular2-toaster");
+var viewOperationModal_component_1 = require("./operation/viewOperationModal/viewOperationModal.component");
+var confirmModal_component_1 = require("./confirmModal/confirmModal.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -57,7 +59,9 @@ AppModule = __decorate([
             operations_component_1.OperationsComponent,
             map_component_1.MapComponent,
             notfound_component_1.NotFoundComponent,
-            addEditOperationModal_component_1.AddOperationModalComponent
+            addEditOperationModal_component_1.AddEditOperationModalComponent,
+            viewOperationModal_component_1.ViewOperationModalComponent,
+            confirmModal_component_1.ConfirmModalComponent
         ],
         providers: [
             app_service_1.AppSettings,
